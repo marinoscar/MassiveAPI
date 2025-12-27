@@ -142,8 +142,8 @@ public sealed class MassiveClient : IMassiveClient
 
         var queryString = BuildQueryString(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "stocks/tickers"
-            : $"stocks/tickers?{queryString}";
+            ? "tickers"
+            : $"tickers?{queryString}";
 
         return await SendAsync<AllTickersResponse>(
                 HttpMethod.Get,
