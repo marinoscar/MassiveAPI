@@ -1,19 +1,19 @@
 using System.Text.Json.Serialization;
-using MassiveAPI.Helpers;
 
 namespace MassiveAPI.Requests;
 
 public sealed class OptionsContractOverviewRequest
 {
-    /// <summary>
-    /// The options ticker composed from underlying, expiration, type, and strike.
-    /// </summary>
-    [JsonIgnore]
-    public OptionsTicker? OptionsTicker { get; set; }
+    public OptionsContractOverviewRequest(string optionsTickerValue)
+    {
+        if (string.IsNullOrWhiteSpace(optionsTickerValue))
+        {
+            throw new ArgumentException("Options ticker value is required.", nameof(optionsTickerValue));
+        }
 
-    /// <summary>
-    /// The formatted options ticker value.
-    /// </summary>
+        OptionsTickerValue = optionsTickerValue;
+    }
+
     [JsonPropertyName("options_ticker")]
-    public string? OptionsTickerValue => OptionsTicker?.ToString();
+    public string OptionsTickerValue { get; }
 }

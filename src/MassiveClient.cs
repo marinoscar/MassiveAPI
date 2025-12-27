@@ -142,8 +142,8 @@ public sealed class MassiveClient : IMassiveClient
 
         var queryString = BuildQueryString(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "stocks/tickers"
-            : $"stocks/tickers?{queryString}";
+            ? "tickers"
+            : $"tickers?{queryString}";
 
         return await SendAsync<AllTickersResponse>(
                 HttpMethod.Get,
@@ -214,13 +214,38 @@ public sealed class MassiveClient : IMassiveClient
             throw new ArgumentException("Options ticker is required.", nameof(request));
         }
 
-        var endpoint = $"options/contracts/{Uri.EscapeDataString(optionsTicker)}/overview";
+        var endpoint = $"options/contracts/{Uri.EscapeDataString(optionsTicker)}";
         return await SendAsync<OptionsContractOverviewResponse>(
                 HttpMethod.Get,
                 endpoint,
                 content: null,
                 "Failed to retrieve the options contract overview from the Massive API.",
                 "Failed to deserialize the options contract overview response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<OptionsContractsResponse> GetOptionsContractsAsync(
+        OptionsContractsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "options/contracts"
+            : $"options/contracts?{queryString}";
+
+        return await SendAsync<OptionsContractsResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve options contracts from the Massive API.",
+                "Failed to deserialize the options contracts response from the Massive API.",
                 cancellationToken)
             .ConfigureAwait(false);
     }
@@ -284,6 +309,23 @@ public sealed class MassiveClient : IMassiveClient
         AddParameter(parameters, "type", request.Type);
         AddParameter(parameters, "search", request.Search);
         AddParameter(parameters, "active", request.Active?.ToString().ToLowerInvariant());
+        AddParameter(parameters, "sort", request.Sort);
+        AddParameter(parameters, "order", request.Order);
+        AddParameter(parameters, "limit", request.Limit?.ToString());
+        AddParameter(parameters, "cursor", request.Cursor);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(OptionsContractsRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "ticker", request.Ticker);
+        AddParameter(parameters, "underlying_ticker", request.UnderlyingTicker);
+        AddParameter(parameters, "contract_type", request.ContractType);
+        AddParameter(parameters, "expiration_date", request.ExpirationDate?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "strike_price", request.StrikePrice?.ToString());
         AddParameter(parameters, "sort", request.Sort);
         AddParameter(parameters, "order", request.Order);
         AddParameter(parameters, "limit", request.Limit?.ToString());
