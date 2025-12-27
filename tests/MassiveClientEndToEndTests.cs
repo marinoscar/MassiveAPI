@@ -60,10 +60,10 @@ public sealed class MassiveClientEndToEndTests
         {
             return;
         }
-        var dt = DateTime.Today.AddDays(-13);
+
         var optionsTicker = new OptionsTicker(
             underlyingTicker: "AAPL",
-            expirationDate: new DateOnly(dt.Year, dt.Month, dt.Day),
+            expirationDate: new DateOnly(2024, 6, 21),
             contractType: OptionContractType.Call,
             strikePrice: 150m);
 

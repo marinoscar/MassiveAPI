@@ -20,7 +20,7 @@ public sealed class OptionsContractOverviewResponse
     /// <summary>
     /// The contract overview payload.
     /// </summary>
-    [JsonPropertyName("data")]
+    [JsonPropertyName("results")]
     public OptionsContractOverviewData? Data { get; init; }
 
     /// <summary>
@@ -33,10 +33,22 @@ public sealed class OptionsContractOverviewResponse
 public sealed class OptionsContractOverviewData
 {
     /// <summary>
+    /// Additional underlying components for the contract.
+    /// </summary>
+    [JsonPropertyName("additional_underlyings")]
+    public IReadOnlyList<OptionsAdditionalUnderlying>? AdditionalUnderlyings { get; init; }
+
+    /// <summary>
     /// The options contract ticker.
     /// </summary>
     [JsonPropertyName("ticker")]
     public string? Ticker { get; init; }
+
+    /// <summary>
+    /// The contract classification identifier.
+    /// </summary>
+    [JsonPropertyName("cfi")]
+    public string? Cfi { get; init; }
 
     /// <summary>
     /// The underlying asset ticker.
@@ -87,13 +99,34 @@ public sealed class OptionsContractOverviewData
     public string? CurrencyName { get; init; }
 
     /// <summary>
-    /// The last updated timestamp for the contract data.
+    /// Additional contract fields not explicitly modeled.
     /// </summary>
-    [JsonPropertyName("last_updated_utc")]
-    public DateTimeOffset? LastUpdatedUtc { get; init; }
+    [JsonExtensionData]
+    public Dictionary<string, JsonElement>? AdditionalFields { get; init; }
+}
+
+public sealed class OptionsAdditionalUnderlying
+{
+    /// <summary>
+    /// The amount of the additional underlying.
+    /// </summary>
+    [JsonPropertyName("amount")]
+    public decimal? Amount { get; init; }
 
     /// <summary>
-    /// Additional contract fields not explicitly modeled.
+    /// The type of the additional underlying.
+    /// </summary>
+    [JsonPropertyName("type")]
+    public string? Type { get; init; }
+
+    /// <summary>
+    /// The ticker or symbol for the additional underlying.
+    /// </summary>
+    [JsonPropertyName("underlying")]
+    public string? Underlying { get; init; }
+
+    /// <summary>
+    /// Additional fields not explicitly modeled.
     /// </summary>
     [JsonExtensionData]
     public Dictionary<string, JsonElement>? AdditionalFields { get; init; }
