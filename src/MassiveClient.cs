@@ -10,7 +10,7 @@ namespace MassiveAPI;
 /// <summary>
 /// Provides a typed client for accessing the Massive API.
 /// </summary>
-public sealed class MassiveClient : IDisposable
+public sealed class MassiveClient : IMassiveClient
 {
     private static readonly JsonSerializerOptions SerializerOptions = new()
     {
@@ -66,17 +66,7 @@ public sealed class MassiveClient : IDisposable
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
-    /// <summary>
-    /// Retrieves the overview data for a single ticker.
-    /// </summary>
-    /// <param name="request">The request describing the ticker to load.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The ticker overview response payload.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
-    /// <exception cref="MassiveApiException">
-    /// Thrown when the Massive API request fails or the response cannot be deserialized.
-    /// </exception>
+    /// <inheritdoc />
     public async Task<TickerOverviewResponse> GetTickerOverviewAsync(
         TickerOverviewRequest request,
         CancellationToken cancellationToken = default)
@@ -97,20 +87,7 @@ public sealed class MassiveClient : IDisposable
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Retrieves aggregated custom bar data for a ticker over a specified time range.
-    /// </summary>
-    /// <param name="request">The request describing the aggregation parameters.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The custom bars response payload.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
-    /// <exception cref="ArgumentException">
-    /// Thrown when required request fields are missing or invalid.
-    /// </exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
-    /// <exception cref="MassiveApiException">
-    /// Thrown when the Massive API request fails or the response cannot be deserialized.
-    /// </exception>
+    /// <inheritdoc />
     public async Task<CustomBarsResponse> GetCustomBarsAsync(
         CustomBarsRequest request,
         CancellationToken cancellationToken = default)
@@ -153,17 +130,7 @@ public sealed class MassiveClient : IDisposable
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Retrieves all tickers with optional filtering and pagination.
-    /// </summary>
-    /// <param name="request">The request describing ticker filters.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The all tickers response payload.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
-    /// <exception cref="MassiveApiException">
-    /// Thrown when the Massive API request fails or the response cannot be deserialized.
-    /// </exception>
+    /// <inheritdoc />
     public async Task<AllTickersResponse> GetAllTickersAsync(
         AllTickersRequest request,
         CancellationToken cancellationToken = default)
@@ -188,20 +155,7 @@ public sealed class MassiveClient : IDisposable
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Retrieves aggregated custom bar data for an options ticker over a specified time range.
-    /// </summary>
-    /// <param name="request">The request describing the aggregation parameters.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The options custom bars response payload.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
-    /// <exception cref="ArgumentException">
-    /// Thrown when required request fields are missing or invalid.
-    /// </exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
-    /// <exception cref="MassiveApiException">
-    /// Thrown when the Massive API request fails or the response cannot be deserialized.
-    /// </exception>
+    /// <inheritdoc />
     public async Task<OptionsCustomBarsResponse> GetOptionsCustomBarsAsync(
         OptionsCustomBarsRequest request,
         CancellationToken cancellationToken = default)
@@ -244,18 +198,7 @@ public sealed class MassiveClient : IDisposable
             .ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Retrieves the overview data for a single options contract.
-    /// </summary>
-    /// <param name="request">The request describing the options contract to load.</param>
-    /// <param name="cancellationToken">The token used to cancel the operation.</param>
-    /// <returns>The options contract overview response payload.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="request"/> is missing the options ticker.</exception>
-    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
-    /// <exception cref="MassiveApiException">
-    /// Thrown when the Massive API request fails or the response cannot be deserialized.
-    /// </exception>
+    /// <inheritdoc />
     public async Task<OptionsContractOverviewResponse> GetOptionsContractOverviewAsync(
         OptionsContractOverviewRequest request,
         CancellationToken cancellationToken = default)
@@ -352,9 +295,7 @@ public sealed class MassiveClient : IDisposable
         parameters.Add($"{WebUtility.UrlEncode(name)}={WebUtility.UrlEncode(value)}");
     }
 
-    /// <summary>
-    /// Releases resources used by the client instance.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         if (_disposeClient)
