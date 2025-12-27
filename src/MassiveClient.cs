@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using MassiveAPI.Requests;
 using MassiveAPI.Responses;
@@ -84,17 +85,96 @@ public sealed class MassiveClient : IDisposable
             throw new ArgumentNullException(nameof(request));
         }
 
+        var endpoint = $"stocks/tickers/{Uri.EscapeDataString(request.Ticker)}/overview";
+        return await SendAsync<TickerOverviewResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve the ticker overview from the Massive API.",
+                "Failed to deserialize the ticker overview response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Retrieves aggregated custom bar data for a ticker over a specified time range.
+    /// </summary>
+    /// <param name="request">The request describing the aggregation parameters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The custom bars response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when required request fields are missing or invalid.
+    /// </exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    public async Task<CustomBarsResponse> GetCustomBarsAsync(
+        CustomBarsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Ticker))
+        {
+            throw new ArgumentException("Ticker is required.", nameof(request));
+        }
+
+        if (request.Multiplier is null || request.Multiplier <= 0)
+        {
+            throw new ArgumentException("Multiplier must be greater than zero.", nameof(request));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Timespan))
+        {
+            throw new ArgumentException("Timespan is required.", nameof(request));
+        }
+
+        if (request.From is null || request.To is null)
+        {
+            throw new ArgumentException("Both from and to timestamps are required.", nameof(request));
+        }
+
+        var endpoint = "stocks/aggregates/custom-bars";
+        var payload = JsonSerializer.Serialize(request, SerializerOptions);
+        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+        return await SendAsync<CustomBarsResponse>(
+                HttpMethod.Post,
+                endpoint,
+                content,
+                "Failed to retrieve custom bars from the Massive API.",
+                "Failed to deserialize the custom bars response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private async Task<TResponse> SendAsync<TResponse>(
+        HttpMethod method,
+        string endpoint,
+        HttpContent? content,
+        string requestErrorMessage,
+        string deserializationErrorMessage,
+        CancellationToken cancellationToken)
+        where TResponse : class, new()
+    {
         try
         {
-            var endpoint = $"stocks/tickers/{Uri.EscapeDataString(request.Ticker)}/overview";
-            using var response = await _httpClient.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
+            using var request = new HttpRequestMessage(method, endpoint)
+            {
+                Content = content
+            };
+            using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-            var payload = await JsonSerializer.DeserializeAsync<TickerOverviewResponse>(stream, SerializerOptions, cancellationToken)
+            var payload = await JsonSerializer.DeserializeAsync<TResponse>(stream, SerializerOptions, cancellationToken)
                 .ConfigureAwait(false);
 
-            return payload ?? new TickerOverviewResponse();
+            return payload ?? new TResponse();
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -102,11 +182,11 @@ public sealed class MassiveClient : IDisposable
         }
         catch (HttpRequestException ex)
         {
-            throw new MassiveApiException("Failed to retrieve the ticker overview from the Massive API.", ex);
+            throw new MassiveApiException(requestErrorMessage, ex);
         }
         catch (JsonException ex)
         {
-            throw new MassiveApiException("Failed to deserialize the ticker overview response from the Massive API.", ex);
+            throw new MassiveApiException(deserializationErrorMessage, ex);
         }
         catch (OperationCanceledException ex)
         {
