@@ -75,4 +75,23 @@ public sealed class MassiveClientEndToEndTests
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));
     }
+
+    [Fact]
+    public async Task GetOptionsContractsAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetOptionsContractsAsync(new OptionsContractsRequest
+        {
+            UnderlyingTicker = "AAPL",
+            Limit = 1
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
 }

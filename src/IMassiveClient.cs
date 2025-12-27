@@ -89,4 +89,19 @@ public interface IMassiveClient : IDisposable
     Task<OptionsContractOverviewResponse> GetOptionsContractOverviewAsync(
         OptionsContractOverviewRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves all options contracts with optional filtering and pagination.
+    /// </summary>
+    /// <param name="request">The request describing contract filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The options contracts response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<OptionsContractsResponse> GetOptionsContractsAsync(
+        OptionsContractsRequest request,
+        CancellationToken cancellationToken = default);
 }
