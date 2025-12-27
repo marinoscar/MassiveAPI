@@ -214,7 +214,7 @@ public sealed class MassiveClient : IMassiveClient
             throw new ArgumentException("Options ticker is required.", nameof(request));
         }
 
-        var endpoint = $"options/contracts/{Uri.EscapeDataString(optionsTicker)}";
+        var endpoint = $"options/contracts/O:{Uri.EscapeDataString(optionsTicker)}";
         return await SendAsync<OptionsContractOverviewResponse>(
                 HttpMethod.Get,
                 endpoint,
