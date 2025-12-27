@@ -188,6 +188,62 @@ public sealed class MassiveClient : IDisposable
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Retrieves aggregated custom bar data for an options ticker over a specified time range.
+    /// </summary>
+    /// <param name="request">The request describing the aggregation parameters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The options custom bars response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when required request fields are missing or invalid.
+    /// </exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    public async Task<OptionsCustomBarsResponse> GetOptionsCustomBarsAsync(
+        OptionsCustomBarsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Ticker))
+        {
+            throw new ArgumentException("Ticker is required.", nameof(request));
+        }
+
+        if (request.Multiplier is null || request.Multiplier <= 0)
+        {
+            throw new ArgumentException("Multiplier must be greater than zero.", nameof(request));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Timespan))
+        {
+            throw new ArgumentException("Timespan is required.", nameof(request));
+        }
+
+        if (request.From is null || request.To is null)
+        {
+            throw new ArgumentException("Both from and to timestamps are required.", nameof(request));
+        }
+
+        var endpoint = "options/aggregates/custom-bars";
+        var payload = JsonSerializer.Serialize(request, SerializerOptions);
+        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+        return await SendAsync<OptionsCustomBarsResponse>(
+                HttpMethod.Post,
+                endpoint,
+                content,
+                "Failed to retrieve options custom bars from the Massive API.",
+                "Failed to deserialize the options custom bars response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
