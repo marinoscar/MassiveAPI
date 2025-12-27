@@ -11,7 +11,7 @@ public sealed class TickerOverviewResponse
     [JsonPropertyName("request_id")]
     public string? RequestId { get; init; }
 
-    [JsonPropertyName("data")]
+    [JsonPropertyName("results")]
     public TickerOverviewData? Data { get; init; }
 
     [JsonExtensionData]
@@ -53,9 +53,6 @@ public sealed class TickerOverviewData
     [JsonPropertyName("share_class_figi")]
     public string? ShareClassFigi { get; init; }
 
-    [JsonPropertyName("last_updated_utc")]
-    public DateTimeOffset? LastUpdatedUtc { get; init; }
-
     [JsonPropertyName("market_cap")]
     public decimal? MarketCap { get; init; }
 
@@ -91,9 +88,6 @@ public sealed class TickerOverviewData
 
     [JsonPropertyName("ticker_root")]
     public string? TickerRoot { get; init; }
-
-    [JsonPropertyName("ticker_suffix")]
-    public string? TickerSuffix { get; init; }
 
     [JsonPropertyName("sic_code")]
     public string? SicCode { get; init; }
