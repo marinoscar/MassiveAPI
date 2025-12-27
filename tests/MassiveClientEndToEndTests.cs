@@ -9,7 +9,7 @@ public sealed class MassiveClientEndToEndTests
 {
     private static MassiveClient? CreateClient()
     {
-        var apiKey = Environment.GetEnvironmentVariable("MASSIVE_API_KEY", EnvironmentVariableTarget.User);
+        var apiKey = Environment.GetEnvironmentVariable("MASSIVE_API_KEY");
         if (string.IsNullOrWhiteSpace(apiKey))
         {
             return null;
