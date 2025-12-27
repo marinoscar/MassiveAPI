@@ -244,6 +244,44 @@ public sealed class MassiveClient : IDisposable
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Retrieves the overview data for a single options contract.
+    /// </summary>
+    /// <param name="request">The request describing the options contract to load.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The options contract overview response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="request"/> is missing the options ticker.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    public async Task<OptionsContractOverviewResponse> GetOptionsContractOverviewAsync(
+        OptionsContractOverviewRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var optionsTicker = request.OptionsTickerValue;
+        if (string.IsNullOrWhiteSpace(optionsTicker))
+        {
+            throw new ArgumentException("Options ticker is required.", nameof(request));
+        }
+
+        var endpoint = $"options/contracts/{Uri.EscapeDataString(optionsTicker)}/overview";
+        return await SendAsync<OptionsContractOverviewResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve the options contract overview from the Massive API.",
+                "Failed to deserialize the options contract overview response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
