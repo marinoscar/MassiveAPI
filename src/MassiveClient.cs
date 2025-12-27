@@ -61,7 +61,7 @@ public sealed class MassiveClient : IMassiveClient
         _apiKey = apiKey;
         _disposeClient = httpClient is null;
         _httpClient = httpClient ?? new HttpClient();
-        _httpClient.BaseAddress = baseUri ?? new Uri("https://api.massive.com/");
+        _httpClient.BaseAddress = baseUri ?? new Uri("https://api.massive.com/v3/reference/");
 
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
@@ -76,7 +76,7 @@ public sealed class MassiveClient : IMassiveClient
             throw new ArgumentNullException(nameof(request));
         }
 
-        var endpoint = $"stocks/tickers/{Uri.EscapeDataString(request.Ticker)}/overview";
+        var endpoint = $"tickers/{Uri.EscapeDataString(request.Ticker)}";
         return await SendAsync<TickerOverviewResponse>(
                 HttpMethod.Get,
                 endpoint,
