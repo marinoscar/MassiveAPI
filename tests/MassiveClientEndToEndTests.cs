@@ -1,5 +1,4 @@
 using MassiveAPI;
-using MassiveAPI.Helpers;
 using MassiveAPI.Requests;
 using Xunit;
 
@@ -61,16 +60,8 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var optionsTicker = new OptionsTicker(
-            underlyingTicker: "AAPL",
-            expirationDate: new DateOnly(2024, 6, 21),
-            contractType: OptionContractType.Call,
-            strikePrice: 150m);
-
-        var response = await client.GetOptionsContractOverviewAsync(new OptionsContractOverviewRequest
-        {
-            OptionsTicker = optionsTicker
-        });
+        var response = await client.GetOptionsContractOverviewAsync(
+            new OptionsContractOverviewRequest("O:AAPL260102C00110000"));
 
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));

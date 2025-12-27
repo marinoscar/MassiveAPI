@@ -1,13 +1,12 @@
 # MassiveAPI
 
-A typed C# client library for the Massive REST API. The library provides request/response models,
-helper utilities, and a `MassiveClient` implementation (plus `IMassiveClient`) for interacting
-with the Massive endpoints using strongly-typed inputs and outputs.
+A typed C# client library for the Massive REST API. The library provides request/response models
+and a `MassiveClient` implementation (plus `IMassiveClient`) for interacting with the Massive
+endpoints using strongly-typed inputs and outputs.
 
 ## Features
 
 - Typed request/response models organized under `MassiveAPI.Requests` and `MassiveAPI.Responses`.
-- Helper utilities such as `OptionsTicker` for building options ticker strings.
 - Consistent error handling via `MassiveApiException`.
 - XML documentation across the public API for discoverability.
 
@@ -20,7 +19,6 @@ reference the compiled assembly once you build it.
 
 ```csharp
 using MassiveAPI;
-using MassiveAPI.Helpers;
 using MassiveAPI.Requests;
 
 var client = new MassiveClient("YOUR_API_KEY");
@@ -50,24 +48,16 @@ var customBars = await client.GetCustomBarsAsync(new CustomBarsRequest
 // Options custom bars
 var optionsBars = await client.GetOptionsCustomBarsAsync(new OptionsCustomBarsRequest
 {
-    Ticker = "AAPL240621C00150000",
+    Ticker = "O:AAPL240621C00150000",
     Multiplier = 1,
     Timespan = "day",
     From = new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero),
     To = new DateTimeOffset(2024, 2, 1, 0, 0, 0, TimeSpan.Zero)
 });
 
-// Options contract overview using OptionsTicker helper
-var optionsTicker = new OptionsTicker(
-    underlyingTicker: "AAPL",
-    expirationDate: new DateOnly(2024, 6, 21),
-    contractType: OptionContractType.Call,
-    strikePrice: 150m);
-
-var contractOverview = await client.GetOptionsContractOverviewAsync(new OptionsContractOverviewRequest
-{
-    OptionsTicker = optionsTicker
-});
+// Options contract overview
+var contractOverview = await client.GetOptionsContractOverviewAsync(
+    new OptionsContractOverviewRequest("O:AAPL260102C00110000"));
 ```
 
 ## Error handling
@@ -80,7 +70,6 @@ handling.
 
 - `src/Requests`: Request DTOs used for API calls.
 - `src/Responses`: Response DTOs returned by API calls.
-- `src/Helpers`: Helper utilities (for example, `OptionsTicker`).
 - `src/MassiveClient.cs`: `MassiveClient` implementation.
 - `src/IMassiveClient.cs`: Interface for the client.
 
