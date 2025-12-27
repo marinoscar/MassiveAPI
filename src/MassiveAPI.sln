@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36811.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassiveAPI", "MassiveAPI.csproj", "{F7AE8535-8325-4CF3-B314-48B38A979AD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassiveAPI.UnitTests", "..\MassiveAPI.UnitTests\MassiveAPI.UnitTests.csproj", "{5E19E2B7-2D8D-42D9-B87A-319CA83CED9A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassiveAPI.UnitTests", "..\\tests\\MassiveAPI.UnitTests.csproj", "{7BF2C7E3-6E2E-4D16-BA83-D94C9520B4F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{F7AE8535-8325-4CF3-B314-48B38A979AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7AE8535-8325-4CF3-B314-48B38A979AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7AE8535-8325-4CF3-B314-48B38A979AD1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E19E2B7-2D8D-42D9-B87A-319CA83CED9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E19E2B7-2D8D-42D9-B87A-319CA83CED9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E19E2B7-2D8D-42D9-B87A-319CA83CED9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E19E2B7-2D8D-42D9-B87A-319CA83CED9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BF2C7E3-6E2E-4D16-BA83-D94C9520B4F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BF2C7E3-6E2E-4D16-BA83-D94C9520B4F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BF2C7E3-6E2E-4D16-BA83-D94C9520B4F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BF2C7E3-6E2E-4D16-BA83-D94C9520B4F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
