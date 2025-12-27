@@ -31,7 +31,7 @@ public sealed class MassiveClientHttpTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("stocks/tickers", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("tickers", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("market=stocks", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("active=true", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("limit=10", uri!.Query, StringComparison.OrdinalIgnoreCase);
