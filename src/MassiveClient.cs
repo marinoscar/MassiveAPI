@@ -17,6 +17,7 @@ public sealed class MassiveClient : IMassiveClient
         PropertyNameCaseInsensitive = true
     };
 
+    private readonly string _apiKey;
     private readonly HttpClient _httpClient;
     private readonly bool _disposeClient;
 
@@ -57,12 +58,11 @@ public sealed class MassiveClient : IMassiveClient
             throw new ArgumentException("API key header name is required.", nameof(apiKeyHeaderName));
         }
 
+        _apiKey = apiKey;
         _disposeClient = httpClient is null;
         _httpClient = httpClient ?? new HttpClient();
-        _httpClient.BaseAddress = baseUri ?? new Uri("https://api.massive.com/v3/reference/");
+        _httpClient.BaseAddress = baseUri ?? new Uri("https://api.massive.com/");
 
-        _httpClient.DefaultRequestHeaders.Remove(apiKeyHeaderName);
-        _httpClient.DefaultRequestHeaders.Add(apiKeyHeaderName, apiKey);
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
@@ -76,7 +76,7 @@ public sealed class MassiveClient : IMassiveClient
             throw new ArgumentNullException(nameof(request));
         }
 
-        var endpoint = $"tickers/{Uri.EscapeDataString(request.Ticker)}";
+        var endpoint = $"stocks/tickers/{Uri.EscapeDataString(request.Ticker)}/overview";
         return await SendAsync<TickerOverviewResponse>(
                 HttpMethod.Get,
                 endpoint,
@@ -236,7 +236,8 @@ public sealed class MassiveClient : IMassiveClient
     {
         try
         {
-            using var request = new HttpRequestMessage(method, endpoint)
+            var requestUri = AppendApiKey(endpoint);
+            using var request = new HttpRequestMessage(method, requestUri)
             {
                 Content = content
             };
@@ -265,6 +266,12 @@ public sealed class MassiveClient : IMassiveClient
         {
             throw new MassiveApiException("The Massive API request timed out.", ex);
         }
+    }
+
+    private string AppendApiKey(string endpoint)
+    {
+        var separator = endpoint.Contains('?') ? "&" : "?";
+        return $"{endpoint}{separator}apiKey={Uri.EscapeDataString(_apiKey)}";
     }
 
     private static string BuildQueryString(AllTickersRequest request)
