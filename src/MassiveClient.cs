@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -152,6 +153,41 @@ public sealed class MassiveClient : IDisposable
             .ConfigureAwait(false);
     }
 
+    /// <summary>
+    /// Retrieves all tickers with optional filtering and pagination.
+    /// </summary>
+    /// <param name="request">The request describing ticker filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The all tickers response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    public async Task<AllTickersResponse> GetAllTickersAsync(
+        AllTickersRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "stocks/tickers"
+            : $"stocks/tickers?{queryString}";
+
+        return await SendAsync<AllTickersResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve tickers from the Massive API.",
+                "Failed to deserialize the tickers response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -192,6 +228,34 @@ public sealed class MassiveClient : IDisposable
         {
             throw new MassiveApiException("The Massive API request timed out.", ex);
         }
+    }
+
+    private static string BuildQueryString(AllTickersRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "ticker", request.Ticker);
+        AddParameter(parameters, "market", request.Market);
+        AddParameter(parameters, "locale", request.Locale);
+        AddParameter(parameters, "type", request.Type);
+        AddParameter(parameters, "search", request.Search);
+        AddParameter(parameters, "active", request.Active?.ToString().ToLowerInvariant());
+        AddParameter(parameters, "sort", request.Sort);
+        AddParameter(parameters, "order", request.Order);
+        AddParameter(parameters, "limit", request.Limit?.ToString());
+        AddParameter(parameters, "cursor", request.Cursor);
+
+        return string.Join("&", parameters);
+    }
+
+    private static void AddParameter(ICollection<string> parameters, string name, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
+
+        parameters.Add($"{WebUtility.UrlEncode(name)}={WebUtility.UrlEncode(value)}");
     }
 
     /// <summary>
