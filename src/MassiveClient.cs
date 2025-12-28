@@ -471,6 +471,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<ExchangesResponse> GetExchangesAsync(
+        ExchangesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "exchanges"
+            : $"exchanges?{queryString}";
+
+        return await SendAsync<ExchangesResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve exchanges from the Massive API.",
+                "Failed to deserialize the exchanges response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -665,6 +690,16 @@ public sealed class MassiveClient : IMassiveClient
         AddParameter(parameters, "sort", request.Sort);
         AddParameter(parameters, "order", request.Order);
         AddParameter(parameters, "expand", request.Expand?.ToString().ToLowerInvariant());
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(ExchangesRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "asset_class", request.AssetClass);
+        AddParameter(parameters, "locale", request.Locale);
 
         return string.Join("&", parameters);
     }

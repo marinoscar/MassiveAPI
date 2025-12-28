@@ -239,4 +239,19 @@ public interface IMassiveClient : IDisposable
     Task<RelativeStrengthIndexResponse> GetRelativeStrengthIndexAsync(
         RelativeStrengthIndexRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the list of exchanges.
+    /// </summary>
+    /// <param name="request">The request describing exchange filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The exchanges response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<ExchangesResponse> GetExchangesAsync(
+        ExchangesRequest request,
+        CancellationToken cancellationToken = default);
 }

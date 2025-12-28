@@ -263,4 +263,23 @@ public sealed class MassiveClientEndToEndTests
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));
     }
+
+    [Fact]
+    public async Task GetExchangesAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetExchangesAsync(new ExchangesRequest
+        {
+            AssetClass = "stocks",
+            Locale = "us"
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
 }
