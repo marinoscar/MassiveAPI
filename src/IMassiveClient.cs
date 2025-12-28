@@ -134,4 +134,19 @@ public interface IMassiveClient : IDisposable
     Task<RelatedTickersResponse> GetRelatedTickersAsync(
         RelatedTickersRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the daily market summary for a given date.
+    /// </summary>
+    /// <param name="request">The request describing the summary date and filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The daily market summary response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<DailyMarketSummaryResponse> GetDailyMarketSummaryAsync(
+        DailyMarketSummaryRequest request,
+        CancellationToken cancellationToken = default);
 }
