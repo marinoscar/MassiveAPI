@@ -164,4 +164,19 @@ public interface IMassiveClient : IDisposable
     Task<DailyTickerSummaryResponse> GetDailyTickerSummaryAsync(
         DailyTickerSummaryRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the previous day bar for a ticker.
+    /// </summary>
+    /// <param name="request">The request describing the ticker and filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The previous day bar response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<PreviousDayBarResponse> GetPreviousDayBarAsync(
+        PreviousDayBarRequest request,
+        CancellationToken cancellationToken = default);
 }

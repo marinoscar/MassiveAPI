@@ -346,6 +346,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<PreviousDayBarResponse> GetPreviousDayBarAsync(
+        PreviousDayBarRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? $"stocks/aggregates/previous-day-bar/{Uri.EscapeDataString(request.Ticker)}"
+            : $"stocks/aggregates/previous-day-bar/{Uri.EscapeDataString(request.Ticker)}?{queryString}";
+
+        return await SendAsync<PreviousDayBarResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve the previous day bar from the Massive API.",
+                "Failed to deserialize the previous day bar response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -457,6 +482,15 @@ public sealed class MassiveClient : IMassiveClient
 
         AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
         AddParameter(parameters, "locale", request.Locale);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(PreviousDayBarRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
 
         return string.Join("&", parameters);
     }
