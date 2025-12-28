@@ -139,4 +139,24 @@ public sealed class MassiveClientEndToEndTests
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));
     }
+
+    [Fact]
+    public async Task GetDailyTickerSummaryAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
+        var response = await client.GetDailyTickerSummaryAsync(new DailyTickerSummaryRequest(\"AAPL\", date)
+        {
+            Adjusted = true,
+            Locale = \"us\"
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
 }

@@ -321,6 +321,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<DailyTickerSummaryResponse> GetDailyTickerSummaryAsync(
+        DailyTickerSummaryRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? $"stocks/aggregates/daily-ticker-summary/{Uri.EscapeDataString(request.Ticker)}/{request.Date:yyyy-MM-dd}"
+            : $"stocks/aggregates/daily-ticker-summary/{Uri.EscapeDataString(request.Ticker)}/{request.Date:yyyy-MM-dd}?{queryString}";
+
+        return await SendAsync<DailyTickerSummaryResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve the daily ticker summary from the Massive API.",
+                "Failed to deserialize the daily ticker summary response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -421,6 +446,16 @@ public sealed class MassiveClient : IMassiveClient
 
         AddParameter(parameters, "date", request.Date.ToString("yyyy-MM-dd"));
         AddParameter(parameters, "market", request.Market);
+        AddParameter(parameters, "locale", request.Locale);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(DailyTickerSummaryRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
         AddParameter(parameters, "locale", request.Locale);
 
         return string.Join("&", parameters);
