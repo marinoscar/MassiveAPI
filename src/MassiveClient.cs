@@ -275,6 +275,27 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<RelatedTickersResponse> GetRelatedTickersAsync(
+        RelatedTickersRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var endpoint = $"tickers/{Uri.EscapeDataString(request.Ticker)}/related";
+        return await SendAsync<RelatedTickersResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve related tickers from the Massive API.",
+                "Failed to deserialize the related tickers response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
