@@ -198,4 +198,25 @@ public sealed class MassiveClientEndToEndTests
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));
     }
+
+    [Fact]
+    public async Task GetExponentialMovingAverageAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetExponentialMovingAverageAsync(new ExponentialMovingAverageRequest("AAPL")
+        {
+            Window = 10,
+            Timespan = "day",
+            Adjusted = true,
+            Limit = 5
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
 }
