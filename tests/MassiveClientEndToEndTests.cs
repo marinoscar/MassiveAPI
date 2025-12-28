@@ -219,4 +219,27 @@ public sealed class MassiveClientEndToEndTests
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));
     }
+
+    [Fact]
+    public async Task GetMovingAverageConvergenceDivergenceAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetMovingAverageConvergenceDivergenceAsync(new MovingAverageConvergenceDivergenceRequest("AAPL")
+        {
+            ShortWindow = 12,
+            LongWindow = 26,
+            SignalWindow = 9,
+            Timespan = "day",
+            Adjusted = true,
+            Limit = 5
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
 }

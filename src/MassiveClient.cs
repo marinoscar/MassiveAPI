@@ -421,6 +421,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<MovingAverageConvergenceDivergenceResponse> GetMovingAverageConvergenceDivergenceAsync(
+        MovingAverageConvergenceDivergenceRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? $"stocks/technical-indicators/macd/{Uri.EscapeDataString(request.Ticker)}"
+            : $"stocks/technical-indicators/macd/{Uri.EscapeDataString(request.Ticker)}?{queryString}";
+
+        return await SendAsync<MovingAverageConvergenceDivergenceResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve the MACD from the Massive API.",
+                "Failed to deserialize the MACD response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -574,6 +599,26 @@ public sealed class MassiveClient : IMassiveClient
         AddParameter(parameters, "timestamp_gt", request.TimestampGreaterThan?.ToString("O"));
         AddParameter(parameters, "timespan", request.Timespan);
         AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
+        AddParameter(parameters, "sort", request.Sort);
+        AddParameter(parameters, "order", request.Order);
+        AddParameter(parameters, "expand", request.Expand?.ToString().ToLowerInvariant());
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(MovingAverageConvergenceDivergenceRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "limit", request.Limit?.ToString());
+        AddParameter(parameters, "timestamp", request.Timestamp?.ToString("O"));
+        AddParameter(parameters, "timestamp_lt", request.TimestampLessThan?.ToString("O"));
+        AddParameter(parameters, "timestamp_gt", request.TimestampGreaterThan?.ToString("O"));
+        AddParameter(parameters, "timespan", request.Timespan);
+        AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
+        AddParameter(parameters, "short_window", request.ShortWindow?.ToString());
+        AddParameter(parameters, "long_window", request.LongWindow?.ToString());
+        AddParameter(parameters, "signal_window", request.SignalWindow?.ToString());
         AddParameter(parameters, "sort", request.Sort);
         AddParameter(parameters, "order", request.Order);
         AddParameter(parameters, "expand", request.Expand?.ToString().ToLowerInvariant());

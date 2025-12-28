@@ -209,4 +209,19 @@ public interface IMassiveClient : IDisposable
     Task<ExponentialMovingAverageResponse> GetExponentialMovingAverageAsync(
         ExponentialMovingAverageRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the moving average convergence/divergence indicator for a ticker.
+    /// </summary>
+    /// <param name="request">The request describing the indicator parameters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The MACD response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<MovingAverageConvergenceDivergenceResponse> GetMovingAverageConvergenceDivergenceAsync(
+        MovingAverageConvergenceDivergenceRequest request,
+        CancellationToken cancellationToken = default);
 }
