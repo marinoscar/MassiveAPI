@@ -559,6 +559,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<FuturesExchangesResponse> GetFuturesExchangesAsync(
+        FuturesExchangesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "futures/vX/exchanges"
+            : $"futures/vX/exchanges?{queryString}";
+
+        return await SendAsync<FuturesExchangesResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve futures exchanges from the Massive API.",
+                "Failed to deserialize the futures exchanges response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -784,6 +809,15 @@ public sealed class MassiveClient : IMassiveClient
 
         AddParameter(parameters, "asset_class", request.AssetClass);
         AddParameter(parameters, "locale", request.Locale);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(FuturesExchangesRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "limit", request.Limit?.ToString());
 
         return string.Join("&", parameters);
     }
