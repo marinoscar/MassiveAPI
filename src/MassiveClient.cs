@@ -496,6 +496,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<MarketHolidaysResponse> GetMarketHolidaysAsync(
+        MarketHolidaysRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "market-holidays"
+            : $"market-holidays?{queryString}";
+
+        return await SendAsync<MarketHolidaysResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve market holidays from the Massive API.",
+                "Failed to deserialize the market holidays response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -699,6 +724,17 @@ public sealed class MassiveClient : IMassiveClient
         var parameters = new List<string>();
 
         AddParameter(parameters, "asset_class", request.AssetClass);
+        AddParameter(parameters, "locale", request.Locale);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(MarketHolidaysRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "market", request.Market);
+        AddParameter(parameters, "exchange", request.Exchange);
         AddParameter(parameters, "locale", request.Locale);
 
         return string.Join("&", parameters);
