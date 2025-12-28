@@ -1,9 +1,10 @@
 # MassiveAPI
-C# client implementation to access the Massive API
 
 A typed C# client library for the Massive REST API. The library provides request/response models
 and a `MassiveClient` implementation (plus `IMassiveClient`) for interacting with the Massive
 endpoints using strongly-typed inputs and outputs.
+
+**Keywords:** Massive API, Massive REST API, stocks, options, tickers, aggregates, C# SDK, .NET client.
 
 ## Features
 

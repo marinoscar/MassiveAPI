@@ -104,4 +104,19 @@ public interface IMassiveClient : IDisposable
     Task<OptionsContractsResponse> GetOptionsContractsAsync(
         OptionsContractsRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves available ticker types.
+    /// </summary>
+    /// <param name="request">The request describing ticker type filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The ticker types response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<TickerTypesResponse> GetTickerTypesAsync(
+        TickerTypesRequest request,
+        CancellationToken cancellationToken = default);
 }

@@ -250,6 +250,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<TickerTypesResponse> GetTickerTypesAsync(
+        TickerTypesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "tickers/types"
+            : $"tickers/types?{queryString}";
+
+        return await SendAsync<TickerTypesResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve ticker types from the Massive API.",
+                "Failed to deserialize the ticker types response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -330,6 +355,16 @@ public sealed class MassiveClient : IMassiveClient
         AddParameter(parameters, "order", request.Order);
         AddParameter(parameters, "limit", request.Limit?.ToString());
         AddParameter(parameters, "cursor", request.Cursor);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(TickerTypesRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "asset_class", request.AssetClass);
+        AddParameter(parameters, "locale", request.Locale);
 
         return string.Join("&", parameters);
     }
