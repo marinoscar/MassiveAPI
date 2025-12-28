@@ -534,6 +534,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<ConditionCodesResponse> GetConditionCodesAsync(
+        ConditionCodesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "condition-codes"
+            : $"condition-codes?{queryString}";
+
+        return await SendAsync<ConditionCodesResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve condition codes from the Massive API.",
+                "Failed to deserialize the condition codes response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -748,6 +773,16 @@ public sealed class MassiveClient : IMassiveClient
 
         AddParameter(parameters, "market", request.Market);
         AddParameter(parameters, "exchange", request.Exchange);
+        AddParameter(parameters, "locale", request.Locale);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(ConditionCodesRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "asset_class", request.AssetClass);
         AddParameter(parameters, "locale", request.Locale);
 
         return string.Join("&", parameters);

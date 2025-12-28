@@ -280,4 +280,19 @@ public interface IMassiveClient : IDisposable
     /// Thrown when the Massive API request fails or the response cannot be deserialized.
     /// </exception>
     Task<MarketStatusResponse> GetMarketStatusAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves condition codes.
+    /// </summary>
+    /// <param name="request">The request describing condition code filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The condition codes response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<ConditionCodesResponse> GetConditionCodesAsync(
+        ConditionCodesRequest request,
+        CancellationToken cancellationToken = default);
 }
