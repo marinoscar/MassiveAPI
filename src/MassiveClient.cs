@@ -371,6 +371,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<SimpleMovingAverageResponse> GetSimpleMovingAverageAsync(
+        SimpleMovingAverageRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? $"stocks/technical-indicators/sma/{Uri.EscapeDataString(request.Ticker)}"
+            : $"stocks/technical-indicators/sma/{Uri.EscapeDataString(request.Ticker)}?{queryString}";
+
+        return await SendAsync<SimpleMovingAverageResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve the simple moving average from the Massive API.",
+                "Failed to deserialize the simple moving average response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -491,6 +516,24 @@ public sealed class MassiveClient : IMassiveClient
         var parameters = new List<string>();
 
         AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(SimpleMovingAverageRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "window", request.Window?.ToString());
+        AddParameter(parameters, "limit", request.Limit?.ToString());
+        AddParameter(parameters, "timestamp", request.Timestamp?.ToString("O"));
+        AddParameter(parameters, "timestamp_lt", request.TimestampLessThan?.ToString("O"));
+        AddParameter(parameters, "timestamp_gt", request.TimestampGreaterThan?.ToString("O"));
+        AddParameter(parameters, "timespan", request.Timespan);
+        AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
+        AddParameter(parameters, "sort", request.Sort);
+        AddParameter(parameters, "order", request.Order);
+        AddParameter(parameters, "expand", request.Expand?.ToString().ToLowerInvariant());
 
         return string.Join("&", parameters);
     }

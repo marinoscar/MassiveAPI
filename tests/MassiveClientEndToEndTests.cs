@@ -177,4 +177,25 @@ public sealed class MassiveClientEndToEndTests
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));
     }
+
+    [Fact]
+    public async Task GetSimpleMovingAverageAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetSimpleMovingAverageAsync(new SimpleMovingAverageRequest(\"AAPL\")
+        {
+            Window = 10,
+            Timespan = \"day\",
+            Adjusted = true,
+            Limit = 5
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
 }
