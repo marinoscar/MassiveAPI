@@ -521,6 +521,19 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<MarketStatusResponse> GetMarketStatusAsync(CancellationToken cancellationToken = default)
+    {
+        return await SendAsync<MarketStatusResponse>(
+                HttpMethod.Get,
+                "market-status",
+                content: null,
+                "Failed to retrieve market status from the Massive API.",
+                "Failed to deserialize the market status response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,

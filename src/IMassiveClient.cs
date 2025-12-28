@@ -269,4 +269,15 @@ public interface IMassiveClient : IDisposable
     Task<MarketHolidaysResponse> GetMarketHolidaysAsync(
         MarketHolidaysRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the current market status.
+    /// </summary>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The market status response payload.</returns>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<MarketStatusResponse> GetMarketStatusAsync(CancellationToken cancellationToken = default);
 }
