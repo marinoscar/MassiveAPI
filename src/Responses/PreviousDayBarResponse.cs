@@ -5,6 +5,14 @@ namespace MassiveAPI.Responses;
 
 public sealed class PreviousDayBarResponse
 {
+
+    /// <summary>
+    /// The ticker returned by the API.
+    /// </summary>
+    [JsonPropertyName("ticker")]
+    public string? Ticker { get; init; }
+
+
     /// <summary>
     /// The status returned by the API.
     /// </summary>
@@ -26,7 +34,7 @@ public sealed class PreviousDayBarResponse
     /// <summary>
     /// The count of results returned.
     /// </summary>
-    [JsonPropertyName("results_count")]
+    [JsonPropertyName("resultsCount")]
     public int? ResultsCount { get; init; }
 
     /// <summary>
@@ -41,7 +49,7 @@ public sealed class PreviousDayBarResult
     /// <summary>
     /// The ticker symbol for the bar.
     /// </summary>
-    [JsonPropertyName("ticker")]
+    [JsonPropertyName("T")]
     public string? Ticker { get; init; }
 
     /// <summary>

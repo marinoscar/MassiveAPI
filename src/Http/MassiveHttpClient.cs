@@ -22,7 +22,8 @@ internal sealed class MassiveHttpClient
         HttpContent? content,
         string requestErrorMessage,
         string deserializationErrorMessage,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default,
+        JsonSerializerOptions jsonSerializerOptions = default!)
         where TResponse : class, new()
     {
         try
@@ -46,7 +47,10 @@ internal sealed class MassiveHttpClient
             response.EnsureSuccessStatusCode();
 
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-            var payload = await JsonSerializer.DeserializeAsync<TResponse>(stream, SerializerOptions, cancellationToken)
+
+            var options = jsonSerializerOptions ?? SerializerOptions;
+
+            var payload = await JsonSerializer.DeserializeAsync<TResponse>(stream, options, cancellationToken)
                 .ConfigureAwait(false);
 
             return payload ?? new TResponse();
