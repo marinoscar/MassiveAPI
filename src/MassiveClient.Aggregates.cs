@@ -103,8 +103,8 @@ public sealed partial class MassiveClient
 
         var queryString = QueryStringBuilder.Build(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? $"stocks/aggregates/daily-ticker-summary/{Uri.EscapeDataString(request.Ticker)}/{request.Date:yyyy-MM-dd}"
-            : $"stocks/aggregates/daily-ticker-summary/{Uri.EscapeDataString(request.Ticker)}/{request.Date:yyyy-MM-dd}?{queryString}";
+            ? $"v1/open-close/{Uri.EscapeDataString(request.Ticker)}/{request.Date:yyyy-MM-dd}"
+            : $"v1/open-close/{Uri.EscapeDataString(request.Ticker)}/{request.Date:yyyy-MM-dd}?{queryString}";
 
         return await _apiClient.SendAsync<DailyTickerSummaryResponse>(
                 HttpMethod.Get,
