@@ -355,4 +355,49 @@ public interface IMassiveClient : IDisposable
     Task<DividendsResponse> GetDividendsAsync(
         DividendsRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves ticker events for a ticker, CUSIP, or Composite FIGI identifier.
+    /// </summary>
+    /// <param name="request">The request describing the identifier and filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The ticker events response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<TickerEventsResponse> GetTickerEventsAsync(
+        TickerEventsRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the options daily ticker summary (open/close) for a contract and date.
+    /// </summary>
+    /// <param name="request">The request describing the options ticker and date.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The options daily ticker summary response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<OptionsDailyTickerSummaryResponse> GetOptionsDailyTickerSummaryAsync(
+        OptionsDailyTickerSummaryRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves the previous day bar for an options contract.
+    /// </summary>
+    /// <param name="request">The request describing the options ticker and filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The options previous day bar response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<OptionsPreviousDayBarResponse> GetOptionsPreviousDayBarAsync(
+        OptionsPreviousDayBarRequest request,
+        CancellationToken cancellationToken = default);
 }

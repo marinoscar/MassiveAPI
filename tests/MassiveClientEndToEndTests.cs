@@ -411,4 +411,56 @@ public sealed class MassiveClientEndToEndTests
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));
     }
+
+    [Fact]
+    public async Task GetTickerEventsAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetTickerEventsAsync(new TickerEventsRequest("AAPL"));
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
+
+    [Fact]
+    public async Task GetOptionsDailyTickerSummaryAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetOptionsDailyTickerSummaryAsync(
+            new OptionsDailyTickerSummaryRequest("O:TSLA210903C00700000", new DateOnly(2023, 1, 9))
+            {
+                Adjusted = false
+            });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
+
+    [Fact]
+    public async Task GetOptionsPreviousDayBarAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetOptionsPreviousDayBarAsync(new OptionsPreviousDayBarRequest("O:TSLA210903C00700000")
+        {
+            Adjusted = false
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
 }
