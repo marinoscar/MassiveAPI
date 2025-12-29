@@ -28,9 +28,6 @@ public sealed class MassiveClientDailyMarketSummaryTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("stocks/aggregates/daily-market-summary", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("date=2024-01-02", uri!.Query, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("market=stocks", uri!.Query, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("locale=us", uri!.Query, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v2/aggs/grouped/locale/us/market/stocks/2024-01-02", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
     }
 }
