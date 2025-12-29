@@ -288,6 +288,17 @@ internal static class QueryStringBuilder
         return string.Join("&", parameters);
     }
 
+    public static string Build(OptionsCustomBarsRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
+        AddParameter(parameters, "sort", request.Sort);
+        AddParameter(parameters, "limit", request.Limit?.ToString());
+
+        return string.Join("&", parameters);
+    }
+
     public static string Build(CustomBarsRequest request)
     {
         var parameters = new List<string>();
