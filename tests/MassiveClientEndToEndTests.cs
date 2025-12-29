@@ -1,7 +1,6 @@
 using MassiveAPI;
 using MassiveAPI.Requests;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace MassiveAPI.UnitTests;
 
@@ -32,6 +31,7 @@ public sealed class MassiveClientEndToEndTests
 
     private void WarnIfNotAuthorized(MassiveNotAuthorizedException ex)
     {
+        
         _output.WriteLine($"WARNING: Not authorized for this endpoint. RequestId={ex.RequestId}. Message={ex.Message}");
     }
 
