@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore solutions
+        run: |
+          set -euo pipefail
+          solutions=$(find . -name "*.sln")
+          if [ -z "$solutions" ]; then
+            echo "No solution files found."
+            exit 1
+          fi
+          for sln in $solutions; do
+            dotnet restore "$sln"
+          done
+
+      - name: Build solutions
+        run: |
+          set -euo pipefail
+          for sln in $(find . -name "*.sln"); do
+            dotnet build "$sln" -c Release --no-restore
+          done
+
+      - name: Test projects
+        run: |
+          set -euo pipefail
+          test_projects=$(find . -name "*Test*.csproj")
+          if [ -z "$test_projects" ]; then
+            echo "No test projects found."
+            exit 1
+          fi
+          for proj in $test_projects; do
+            dotnet test "$proj" -c Release --no-build
+          done
