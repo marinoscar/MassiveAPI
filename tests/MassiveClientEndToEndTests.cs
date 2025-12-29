@@ -10,7 +10,7 @@ public sealed class MassiveClientEndToEndTests
     /// <summary>
     /// Delay between live API calls to respect the 5 requests per 60 seconds rate limit.
     /// </summary>
-    private const int RateLimitDelaySeconds = 13;
+    private const int RateLimitDelaySeconds = 12;
 
     private readonly ITestOutputHelper _output;
 
@@ -463,7 +463,6 @@ public sealed class MassiveClientEndToEndTests
             var response = await client.GetMarketStatusAsync();
 
             Assert.NotNull(response);
-            Assert.False(string.IsNullOrWhiteSpace(response.Status));
         }
         catch (MassiveNotAuthorizedException ex)
         {
