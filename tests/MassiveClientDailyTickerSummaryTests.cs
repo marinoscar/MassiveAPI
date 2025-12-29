@@ -28,7 +28,7 @@ public sealed class MassiveClientDailyTickerSummaryTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("stocks/aggregates/daily-ticker-summary/AAPL/2024-01-02", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v1/open-close/AAPL/2024-01-02", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("adjusted=true", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("locale=us", uri!.Query, StringComparison.OrdinalIgnoreCase);
     }

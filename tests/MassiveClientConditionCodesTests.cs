@@ -28,7 +28,7 @@ public sealed class MassiveClientConditionCodesTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("condition-codes", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v3/reference/conditions", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("asset_class=stocks", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("locale=us", uri!.Query, StringComparison.OrdinalIgnoreCase);
     }
