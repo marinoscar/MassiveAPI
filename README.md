@@ -2,6 +2,7 @@
 
 ![NuGet Downloads](https://img.shields.io/nuget/dt/MassiveAPI)
 ![NuGet Version](https://img.shields.io/nuget/variant/MassiveAPI)
+[![CI](https://github.com/marinoscar/MassiveAPI/actions/workflows/ci.yml/badge.svg)](https://github.com/marinoscar/MassiveAPI/actions/workflows/ci.yml)
 
 
 
