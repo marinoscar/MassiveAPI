@@ -12,6 +12,15 @@ endpoints using strongly-typed inputs and outputs.
 - Consistent error handling via `MassiveApiException`.
 - XML documentation across the public API for discoverability.
 
+## Why MassiveAPI?
+
+- **Build AI agents with market awareness.** Pull real-time and historical market data to give your
+  agents up-to-date context for trading signals, alerts, or portfolio insights.
+- **Strong typing, fewer runtime surprises.** Request/response models are explicit and discoverable
+  in IntelliSense.
+- **Consistent error handling.** API failures are surfaced as `MassiveApiException` for predictable
+  control flow.
+
 ## Installation
 
 Install from NuGet:
@@ -70,6 +79,23 @@ var optionsBars = await client.GetOptionsCustomBarsAsync(new OptionsCustomBarsRe
 var contractOverview = await client.GetOptionsContractOverviewAsync(
     new OptionsContractOverviewRequest("O:AAPL260102C00110000"));
 ```
+
+## Get an API key
+
+To authenticate requests, create an API key in the Massive dashboard and pass it to
+`MassiveClient`. See the official quickstart for step-by-step instructions:
+https://massive.com/docs/rest/quickstart#authenticate-your-request
+
+## Common use cases
+
+- **AI agent context enrichment:** Fetch the latest ticker overview or aggregates to give your
+  agent market-aware context before it responds.
+- **Price history & aggregates:** Retrieve custom bars for backtesting, charting, or ML feature
+  generation.
+- **Options analysis:** Pull options contract details and historical bars for volatility or strategy
+  evaluation.
+- **Watchlists & discovery:** List active tickers by market to build scanners or alerting systems.
+- **Market alerts:** Poll key symbols and trigger notifications on threshold or volume changes.
 
 ## Error handling
 
