@@ -29,9 +29,9 @@ public sealed class MassiveClientEndToEndTests
         return new MassiveClient(apiKey);
     }
 
-    private void WarnIfNotAuthorized(MassiveNotAuthorizedException ex)
+    private void WarnIfNotAuthorized(MassiveNotAuthorizedException ex, string methodName)
     {
-        var warningMsg = $"WARNING: Not authorized for this endpoint. RequestId={ex.RequestId}. Message={ex.Message}";
+        var warningMsg = $"WARNING: Not authorized for this endpoint when calling {methodName}. RequestId={ex.RequestId}. Message={ex.Message}";
         TestContext.Current.AddWarning(warningMsg);
         _output.WriteLine(warningMsg);
     }
@@ -63,7 +63,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetTickerOverviewAsync));
         }
     }
 
@@ -90,7 +90,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetAllTickersAsync));
         }
     }
 
@@ -114,7 +114,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetOptionsContractOverviewAsync));
         }
     }
 
@@ -141,7 +141,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetOptionsContractsAsync));
         }
     }
 
@@ -168,7 +168,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetTickerTypesAsync));
         }
     }
 
@@ -191,7 +191,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetRelatedTickersAsync));
         }
     }
 
@@ -219,7 +219,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetDailyMarketSummaryAsync));
         }
     }
 
@@ -247,7 +247,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetDailyTickerSummaryAsync));
         }
     }
 
@@ -273,7 +273,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetPreviousDayBarAsync));
         }
     }
 
@@ -302,7 +302,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetSimpleMovingAverageAsync));
         }
     }
 
@@ -331,7 +331,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetExponentialMovingAverageAsync));
         }
     }
 
@@ -362,7 +362,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetMovingAverageConvergenceDivergenceAsync));
         }
     }
 
@@ -391,7 +391,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetRelativeStrengthIndexAsync));
         }
     }
 
@@ -418,7 +418,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetExchangesAsync));
         }
     }
 
@@ -446,7 +446,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetMarketHolidaysAsync));
         }
     }
 
@@ -469,7 +469,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetMarketStatusAsync));
         }
     }
 
@@ -496,7 +496,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetConditionCodesAsync));
         }
     }
 
@@ -522,7 +522,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetFuturesExchangesAsync));
         }
     }
 
@@ -549,7 +549,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetInitialPublicOfferingsAsync));
         }
     }
 
@@ -576,7 +576,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetSplitsAsync));
         }
     }
 
@@ -603,7 +603,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetDividendsAsync));
         }
     }
 
@@ -626,7 +626,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetTickerEventsAsync));
         }
     }
 
@@ -653,7 +653,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetOptionsDailyTickerSummaryAsync));
         }
     }
 
@@ -679,7 +679,7 @@ public sealed class MassiveClientEndToEndTests
         }
         catch (MassiveNotAuthorizedException ex)
         {
-            WarnIfNotAuthorized(ex);
+            WarnIfNotAuthorized(ex, nameof(MassiveClient.GetOptionsPreviousDayBarAsync));
         }
     }
 }
