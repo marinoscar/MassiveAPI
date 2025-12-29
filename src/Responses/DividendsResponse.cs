@@ -9,7 +9,7 @@ public sealed class DividendsResponse
     /// A request id assigned by the server.
     /// </summary>
     [JsonPropertyName("request_id")]
-    public long? RequestId { get; init; }
+    public string? RequestId { get; init; }
 
     /// <summary>
     /// The results for this request.
