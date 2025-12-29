@@ -1,6 +1,7 @@
 using MassiveAPI.Builders;
 using MassiveAPI.Requests;
 using MassiveAPI.Responses;
+using System.Text.Json;
 
 namespace MassiveAPI;
 
@@ -150,7 +151,9 @@ public sealed partial class MassiveClient
                 content: null,
                 "Failed to retrieve the options previous day bar from the Massive API.",
                 "Failed to deserialize the options previous day bar response from the Massive API.",
-                cancellationToken)
+                cancellationToken, new JsonSerializerOptions() { 
+                    PropertyNameCaseInsensitive = false
+                })
             .ConfigureAwait(false);
     }
 }
