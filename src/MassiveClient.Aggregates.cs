@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Json;
 using MassiveAPI.Builders;
 using MassiveAPI.Requests;
 using MassiveAPI.Responses;
@@ -38,13 +36,16 @@ public sealed partial class MassiveClient
             throw new ArgumentException("Both from and to timestamps are required.", nameof(request));
         }
 
-        var endpoint = "stocks/aggregates/custom-bars";
-        var payload = JsonSerializer.Serialize(request);
-        var content = new StringContent(payload, Encoding.UTF8, "application/json");
+        var from = request.From.Value.ToString("yyyy-MM-dd");
+        var to = request.To.Value.ToString("yyyy-MM-dd");
+        var queryString = QueryStringBuilder.Build(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? $"v2/aggs/ticker/{Uri.EscapeDataString(request.Ticker)}/range/{request.Multiplier}/{request.Timespan}/{from}/{to}"
+            : $"v2/aggs/ticker/{Uri.EscapeDataString(request.Ticker)}/range/{request.Multiplier}/{request.Timespan}/{from}/{to}?{queryString}";
         return await _apiClient.SendAsync<CustomBarsResponse>(
-                HttpMethod.Post,
+                HttpMethod.Get,
                 endpoint,
-                content,
+                content: null,
                 "Failed to retrieve custom bars from the Massive API.",
                 "Failed to deserialize the custom bars response from the Massive API.",
                 cancellationToken)
