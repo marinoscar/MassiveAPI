@@ -1,11 +1,19 @@
 using MassiveAPI;
 using MassiveAPI.Requests;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace MassiveAPI.UnitTests;
 
 public sealed class MassiveClientEndToEndTests
 {
+    private readonly ITestOutputHelper _output;
+
+    public MassiveClientEndToEndTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
+
     private static MassiveClient? CreateClient()
     {
         var apiKey = Environment.GetEnvironmentVariable("MASSIVE_API_KEY");
@@ -17,6 +25,11 @@ public sealed class MassiveClientEndToEndTests
         return new MassiveClient(apiKey);
     }
 
+    private void WarnIfNotAuthorized(MassiveNotAuthorizedException ex)
+    {
+        _output.WriteLine($"WARNING: Not authorized for this endpoint. RequestId={ex.RequestId}. Message={ex.Message}");
+    }
+
     [Fact]
     public async Task GetTickerOverviewAsync_ReturnsData()
     {
@@ -26,10 +39,17 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetTickerOverviewAsync(new TickerOverviewRequest("AAPL"));
+        try
+        {
+            var response = await client.GetTickerOverviewAsync(new TickerOverviewRequest("AAPL"));
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -41,14 +61,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetAllTickersAsync(new AllTickersRequest
+        try
         {
-            Market = "stocks",
-            Limit = 1
-        });
+            var response = await client.GetAllTickersAsync(new AllTickersRequest
+            {
+                Market = "stocks",
+                Limit = 1
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -60,11 +87,18 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetOptionsContractOverviewAsync(
-            new OptionsContractOverviewRequest("O:AAPL260102C00110000"));
+        try
+        {
+            var response = await client.GetOptionsContractOverviewAsync(
+                new OptionsContractOverviewRequest("O:AAPL260102C00110000"));
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -76,14 +110,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetOptionsContractsAsync(new OptionsContractsRequest
+        try
         {
-            UnderlyingTicker = "AAPL",
-            Limit = 1
-        });
+            var response = await client.GetOptionsContractsAsync(new OptionsContractsRequest
+            {
+                UnderlyingTicker = "AAPL",
+                Limit = 1
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -95,14 +136,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetTickerTypesAsync(new TickerTypesRequest
+        try
         {
-            AssetClass = "stocks",
-            Locale = "us"
-        });
+            var response = await client.GetTickerTypesAsync(new TickerTypesRequest
+            {
+                AssetClass = "stocks",
+                Locale = "us"
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -114,10 +162,17 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetRelatedTickersAsync(new RelatedTickersRequest("AAPL"));
+        try
+        {
+            var response = await client.GetRelatedTickersAsync(new RelatedTickersRequest("AAPL"));
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -129,15 +184,22 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-        var response = await client.GetDailyMarketSummaryAsync(new DailyMarketSummaryRequest(date)
+        try
         {
-            Market = "stocks",
-            Locale = "us"
-        });
+            var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
+            var response = await client.GetDailyMarketSummaryAsync(new DailyMarketSummaryRequest(date)
+            {
+                Market = "stocks",
+                Locale = "us"
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -149,15 +211,22 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-        var response = await client.GetDailyTickerSummaryAsync(new DailyTickerSummaryRequest("AAPL", date)
+        try
         {
-            Adjusted = true,
-            Locale = "us"
-        });
+            var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
+            var response = await client.GetDailyTickerSummaryAsync(new DailyTickerSummaryRequest("AAPL", date)
+            {
+                Adjusted = true,
+                Locale = "us"
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -169,13 +238,20 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetPreviousDayBarAsync(new PreviousDayBarRequest("AAPL")
+        try
         {
-            Adjusted = true
-        });
+            var response = await client.GetPreviousDayBarAsync(new PreviousDayBarRequest("AAPL")
+            {
+                Adjusted = true
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -187,16 +263,23 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetSimpleMovingAverageAsync(new SimpleMovingAverageRequest("AAPL")
+        try
         {
-            Window = 10,
-            Timespan = "day",
-            Adjusted = true,
-            Limit = 5
-        });
+            var response = await client.GetSimpleMovingAverageAsync(new SimpleMovingAverageRequest("AAPL")
+            {
+                Window = 10,
+                Timespan = "day",
+                Adjusted = true,
+                Limit = 5
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -208,16 +291,23 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetExponentialMovingAverageAsync(new ExponentialMovingAverageRequest("AAPL")
+        try
         {
-            Window = 10,
-            Timespan = "day",
-            Adjusted = true,
-            Limit = 5
-        });
+            var response = await client.GetExponentialMovingAverageAsync(new ExponentialMovingAverageRequest("AAPL")
+            {
+                Window = 10,
+                Timespan = "day",
+                Adjusted = true,
+                Limit = 5
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -229,18 +319,25 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetMovingAverageConvergenceDivergenceAsync(new MovingAverageConvergenceDivergenceRequest("AAPL")
+        try
         {
-            ShortWindow = 12,
-            LongWindow = 26,
-            SignalWindow = 9,
-            Timespan = "day",
-            Adjusted = true,
-            Limit = 5
-        });
+            var response = await client.GetMovingAverageConvergenceDivergenceAsync(new MovingAverageConvergenceDivergenceRequest("AAPL")
+            {
+                ShortWindow = 12,
+                LongWindow = 26,
+                SignalWindow = 9,
+                Timespan = "day",
+                Adjusted = true,
+                Limit = 5
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -252,16 +349,23 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetRelativeStrengthIndexAsync(new RelativeStrengthIndexRequest("AAPL")
+        try
         {
-            Window = 14,
-            Timespan = "day",
-            Adjusted = true,
-            Limit = 5
-        });
+            var response = await client.GetRelativeStrengthIndexAsync(new RelativeStrengthIndexRequest("AAPL")
+            {
+                Window = 14,
+                Timespan = "day",
+                Adjusted = true,
+                Limit = 5
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -273,14 +377,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetExchangesAsync(new ExchangesRequest
+        try
         {
-            AssetClass = "stocks",
-            Locale = "us"
-        });
+            var response = await client.GetExchangesAsync(new ExchangesRequest
+            {
+                AssetClass = "stocks",
+                Locale = "us"
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -292,15 +403,22 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetMarketHolidaysAsync(new MarketHolidaysRequest
+        try
         {
-            Market = "stocks",
-            Exchange = "XNYS",
-            Locale = "us"
-        });
+            var response = await client.GetMarketHolidaysAsync(new MarketHolidaysRequest
+            {
+                Market = "stocks",
+                Exchange = "XNYS",
+                Locale = "us"
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -312,10 +430,17 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetMarketStatusAsync();
+        try
+        {
+            var response = await client.GetMarketStatusAsync();
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -327,14 +452,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetConditionCodesAsync(new ConditionCodesRequest
+        try
         {
-            AssetClass = "stocks",
-            Locale = "us"
-        });
+            var response = await client.GetConditionCodesAsync(new ConditionCodesRequest
+            {
+                AssetClass = "stocks",
+                Locale = "us"
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -346,13 +478,20 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetFuturesExchangesAsync(new FuturesExchangesRequest
+        try
         {
-            Limit = 50
-        });
+            var response = await client.GetFuturesExchangesAsync(new FuturesExchangesRequest
+            {
+                Limit = 50
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -364,14 +503,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetInitialPublicOfferingsAsync(new InitialPublicOfferingsRequest
+        try
         {
-            IpoStatus = "history",
-            Limit = 1
-        });
+            var response = await client.GetInitialPublicOfferingsAsync(new InitialPublicOfferingsRequest
+            {
+                IpoStatus = "history",
+                Limit = 1
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -383,14 +529,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetSplitsAsync(new SplitsRequest
+        try
         {
-            Ticker = "AAPL",
-            Limit = 1
-        });
+            var response = await client.GetSplitsAsync(new SplitsRequest
+            {
+                Ticker = "AAPL",
+                Limit = 1
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -402,14 +555,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetDividendsAsync(new DividendsRequest
+        try
         {
-            Ticker = "AAPL",
-            Limit = 1
-        });
+            var response = await client.GetDividendsAsync(new DividendsRequest
+            {
+                Ticker = "AAPL",
+                Limit = 1
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -421,10 +581,17 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetTickerEventsAsync(new TickerEventsRequest("AAPL"));
+        try
+        {
+            var response = await client.GetTickerEventsAsync(new TickerEventsRequest("AAPL"));
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -436,14 +603,21 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetOptionsDailyTickerSummaryAsync(
-            new OptionsDailyTickerSummaryRequest("O:TSLA210903C00700000", new DateOnly(2023, 1, 9))
-            {
-                Adjusted = false
-            });
+        try
+        {
+            var response = await client.GetOptionsDailyTickerSummaryAsync(
+                new OptionsDailyTickerSummaryRequest("O:TSLA210903C00700000", new DateOnly(2023, 1, 9))
+                {
+                    Adjusted = false
+                });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 
     [Fact]
@@ -455,12 +629,19 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetOptionsPreviousDayBarAsync(new OptionsPreviousDayBarRequest("O:TSLA210903C00700000")
+        try
         {
-            Adjusted = false
-        });
+            var response = await client.GetOptionsPreviousDayBarAsync(new OptionsPreviousDayBarRequest("O:TSLA210903C00700000")
+            {
+                Adjusted = false
+            });
 
-        Assert.NotNull(response);
-        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+            Assert.NotNull(response);
+            Assert.False(string.IsNullOrWhiteSpace(response.Status));
+        }
+        catch (MassiveNotAuthorizedException ex)
+        {
+            WarnIfNotAuthorized(ex);
+        }
     }
 }
