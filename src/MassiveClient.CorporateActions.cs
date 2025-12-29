@@ -18,8 +18,8 @@ public sealed partial class MassiveClient
 
         var queryString = QueryStringBuilder.Build(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "ipos"
-            : $"ipos?{queryString}";
+            ? "vX/reference/ipos"
+            : $"vX/reference/ipos?{queryString}";
 
         return await _apiClient.SendAsync<InitialPublicOfferingsResponse>(
                 HttpMethod.Get,
