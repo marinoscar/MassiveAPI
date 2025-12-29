@@ -659,6 +659,81 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<TickerEventsResponse> GetTickerEventsAsync(
+        TickerEventsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? $"tickers/{Uri.EscapeDataString(request.Id)}/events"
+            : $"tickers/{Uri.EscapeDataString(request.Id)}/events?{queryString}";
+
+        return await SendAsync<TickerEventsResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve ticker events from the Massive API.",
+                "Failed to deserialize the ticker events response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<OptionsDailyTickerSummaryResponse> GetOptionsDailyTickerSummaryAsync(
+        OptionsDailyTickerSummaryRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? $"https://api.massive.com/v1/open-close/{Uri.EscapeDataString(request.OptionsTicker)}/{request.Date:yyyy-MM-dd}"
+            : $"https://api.massive.com/v1/open-close/{Uri.EscapeDataString(request.OptionsTicker)}/{request.Date:yyyy-MM-dd}?{queryString}";
+
+        return await SendAsync<OptionsDailyTickerSummaryResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve the options daily ticker summary from the Massive API.",
+                "Failed to deserialize the options daily ticker summary response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<OptionsPreviousDayBarResponse> GetOptionsPreviousDayBarAsync(
+        OptionsPreviousDayBarRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? $"https://api.massive.com/v2/aggs/ticker/{Uri.EscapeDataString(request.OptionsTicker)}/prev"
+            : $"https://api.massive.com/v2/aggs/ticker/{Uri.EscapeDataString(request.OptionsTicker)}/prev?{queryString}";
+
+        return await SendAsync<OptionsPreviousDayBarResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve the options previous day bar from the Massive API.",
+                "Failed to deserialize the options previous day bar response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -964,6 +1039,33 @@ public sealed class MassiveClient : IMassiveClient
         AddParameter(parameters, "distribution_type.any_of", request.DistributionTypeAnyOf);
         AddParameter(parameters, "limit", request.Limit?.ToString());
         AddParameter(parameters, "sort", request.Sort);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(TickerEventsRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "types", request.Types);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(OptionsDailyTickerSummaryRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(OptionsPreviousDayBarRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "adjusted", request.Adjusted?.ToString().ToLowerInvariant());
 
         return string.Join("&", parameters);
     }
