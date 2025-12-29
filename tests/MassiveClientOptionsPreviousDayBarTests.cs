@@ -27,7 +27,7 @@ public sealed class MassiveClientOptionsPreviousDayBarTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("v2/aggs/ticker/O:TSLA210903C00700000/prev", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v2/aggs/ticker/O:TSLA210903C00700000/prev", Uri.UnescapeDataString(uri!.AbsoluteUri), StringComparison.OrdinalIgnoreCase);
         Assert.Contains("adjusted=false", uri!.Query, StringComparison.OrdinalIgnoreCase);
     }
 }

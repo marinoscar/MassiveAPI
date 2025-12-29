@@ -27,7 +27,7 @@ public sealed class MassiveClientOptionsDailyTickerSummaryTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("v1/open-close/O:TSLA210903C00700000/2023-01-09", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v1/open-close/O:TSLA210903C00700000/2023-01-09", Uri.UnescapeDataString(uri!.AbsoluteUri), StringComparison.OrdinalIgnoreCase);
         Assert.Contains("adjusted=false", uri!.Query, StringComparison.OrdinalIgnoreCase);
     }
 }
