@@ -72,7 +72,7 @@ public sealed class PreviousDayBarResult
     /// The trading volume for the session.
     /// </summary>
     [JsonPropertyName("v")]
-    public long? Volume { get; init; }
+    public decimal? Volume { get; init; }
 
     /// <summary>
     /// The volume weighted average price for the session.
@@ -84,13 +84,13 @@ public sealed class PreviousDayBarResult
     /// The number of transactions for the session.
     /// </summary>
     [JsonPropertyName("n")]
-    public long? Transactions { get; init; }
+    public decimal? Transactions { get; init; }
 
     /// <summary>
     /// The timestamp for the session in milliseconds since epoch.
     /// </summary>
     [JsonPropertyName("t")]
-    public long? Timestamp { get; init; }
+    public decimal? Timestamp { get; init; }
 
     /// <summary>
     /// Additional fields not explicitly modeled.
