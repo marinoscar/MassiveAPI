@@ -7,6 +7,11 @@ namespace MassiveAPI.UnitTests;
 
 public sealed class MassiveClientEndToEndTests
 {
+    /// <summary>
+    /// Delay between live API calls to respect the 5 requests per 60 seconds rate limit.
+    /// </summary>
+    private const int RateLimitDelaySeconds = 13;
+
     private readonly ITestOutputHelper _output;
 
     public MassiveClientEndToEndTests(ITestOutputHelper output)
@@ -30,6 +35,14 @@ public sealed class MassiveClientEndToEndTests
         _output.WriteLine($"WARNING: Not authorized for this endpoint. RequestId={ex.RequestId}. Message={ex.Message}");
     }
 
+    /// <summary>
+    /// Waits long enough between live API calls to avoid rate limiting.
+    /// </summary>
+    private static Task WaitForRateLimitAsync()
+    {
+        return Task.Delay(TimeSpan.FromSeconds(RateLimitDelaySeconds));
+    }
+
     [Fact]
     public async Task GetTickerOverviewAsync_ReturnsData()
     {
@@ -41,6 +54,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetTickerOverviewAsync(new TickerOverviewRequest("AAPL"));
 
             Assert.NotNull(response);
@@ -63,6 +77,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetAllTickersAsync(new AllTickersRequest
             {
                 Market = "stocks",
@@ -89,6 +104,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetOptionsContractOverviewAsync(
                 new OptionsContractOverviewRequest("O:AAPL260102C00110000"));
 
@@ -112,6 +128,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetOptionsContractsAsync(new OptionsContractsRequest
             {
                 UnderlyingTicker = "AAPL",
@@ -138,6 +155,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetTickerTypesAsync(new TickerTypesRequest
             {
                 AssetClass = "stocks",
@@ -164,6 +182,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetRelatedTickersAsync(new RelatedTickersRequest("AAPL"));
 
             Assert.NotNull(response);
@@ -186,6 +205,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
             var response = await client.GetDailyMarketSummaryAsync(new DailyMarketSummaryRequest(date)
             {
@@ -213,6 +233,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
             var response = await client.GetDailyTickerSummaryAsync(new DailyTickerSummaryRequest("AAPL", date)
             {
@@ -240,6 +261,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetPreviousDayBarAsync(new PreviousDayBarRequest("AAPL")
             {
                 Adjusted = true
@@ -265,6 +287,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetSimpleMovingAverageAsync(new SimpleMovingAverageRequest("AAPL")
             {
                 Window = 10,
@@ -293,6 +316,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetExponentialMovingAverageAsync(new ExponentialMovingAverageRequest("AAPL")
             {
                 Window = 10,
@@ -321,6 +345,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetMovingAverageConvergenceDivergenceAsync(new MovingAverageConvergenceDivergenceRequest("AAPL")
             {
                 ShortWindow = 12,
@@ -351,6 +376,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetRelativeStrengthIndexAsync(new RelativeStrengthIndexRequest("AAPL")
             {
                 Window = 14,
@@ -379,6 +405,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetExchangesAsync(new ExchangesRequest
             {
                 AssetClass = "stocks",
@@ -405,6 +432,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetMarketHolidaysAsync(new MarketHolidaysRequest
             {
                 Market = "stocks",
@@ -432,6 +460,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetMarketStatusAsync();
 
             Assert.NotNull(response);
@@ -454,6 +483,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetConditionCodesAsync(new ConditionCodesRequest
             {
                 AssetClass = "stocks",
@@ -480,6 +510,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetFuturesExchangesAsync(new FuturesExchangesRequest
             {
                 Limit = 50
@@ -505,6 +536,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetInitialPublicOfferingsAsync(new InitialPublicOfferingsRequest
             {
                 IpoStatus = "history",
@@ -531,6 +563,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetSplitsAsync(new SplitsRequest
             {
                 Ticker = "AAPL",
@@ -557,6 +590,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetDividendsAsync(new DividendsRequest
             {
                 Ticker = "AAPL",
@@ -583,6 +617,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetTickerEventsAsync(new TickerEventsRequest("AAPL"));
 
             Assert.NotNull(response);
@@ -605,6 +640,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetOptionsDailyTickerSummaryAsync(
                 new OptionsDailyTickerSummaryRequest("O:TSLA210903C00700000", new DateOnly(2023, 1, 9))
                 {
@@ -631,6 +667,7 @@ public sealed class MassiveClientEndToEndTests
 
         try
         {
+            await WaitForRateLimitAsync();
             var response = await client.GetOptionsPreviousDayBarAsync(new OptionsPreviousDayBarRequest("O:TSLA210903C00700000")
             {
                 Adjusted = false
