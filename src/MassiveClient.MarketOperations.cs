@@ -106,8 +106,8 @@ public sealed partial class MassiveClient
 
         var queryString = QueryStringBuilder.Build(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "futures/exchanges"
-            : $"futures/exchanges?{queryString}";
+            ? "futures/vX/exchanges"
+            : $"futures/vX/exchanges?{queryString}";
 
         return await _apiClient.SendAsync<FuturesExchangesResponse>(
                 HttpMethod.Get,
