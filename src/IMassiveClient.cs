@@ -258,7 +258,6 @@ public interface IMassiveClient : IDisposable
     /// <summary>
     /// Retrieves market holidays.
     /// </summary>
-    /// <param name="request">The request describing holiday filters.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>The market holidays response payload.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
@@ -266,8 +265,7 @@ public interface IMassiveClient : IDisposable
     /// <exception cref="MassiveApiException">
     /// Thrown when the Massive API request fails or the response cannot be deserialized.
     /// </exception>
-    Task<MarketHolidaysResponse> GetMarketHolidaysAsync(
-        MarketHolidaysRequest request,
+    Task<List<MarketHolidayResult>> GetMarketHolidaysAsync(
         CancellationToken cancellationToken = default);
 
     /// <summary>

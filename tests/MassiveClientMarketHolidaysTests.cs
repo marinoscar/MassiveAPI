@@ -17,14 +17,7 @@ public sealed class MassiveClientMarketHolidaysTests
         };
         var client = new MassiveClient("test-key", httpClient, httpClient.BaseAddress);
 
-        var request = new MarketHolidaysRequest
-        {
-            Market = "stocks",
-            Exchange = "XNYS",
-            Locale = "us"
-        };
-
-        await client.GetMarketHolidaysAsync(request);
+        await client.GetMarketHolidaysAsync();
 
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;

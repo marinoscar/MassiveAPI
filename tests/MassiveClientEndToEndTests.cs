@@ -438,15 +438,9 @@ public sealed class MassiveClientEndToEndTests
         try
         {
             await WaitForRateLimitAsync();
-            var response = await client.GetMarketHolidaysAsync(new MarketHolidaysRequest
-            {
-                Market = "stocks",
-                Exchange = "XNYS",
-                Locale = "us"
-            });
+            var response = await client.GetMarketHolidaysAsync();
 
             Assert.NotNull(response);
-            Assert.False(string.IsNullOrWhiteSpace(response.Status));
         }
         catch (MassiveNotAuthorizedException ex)
         {

@@ -32,21 +32,12 @@ public sealed partial class MassiveClient
     }
 
     /// <inheritdoc />
-    public async Task<MarketHolidaysResponse> GetMarketHolidaysAsync(
-        MarketHolidaysRequest request,
+    public async Task<List<MarketHolidayResult>> GetMarketHolidaysAsync(
         CancellationToken cancellationToken = default)
     {
-        if (request is null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        var endpoint = "/v1/marketstatus/upcoming";
 
-        var queryString = QueryStringBuilder.Build(request);
-        var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "/v1/marketstatus/upcoming"
-            : $"/v1/marketstatus/upcoming?{queryString}";
-
-        return await _apiClient.SendAsync<MarketHolidaysResponse>(
+        return await _apiClient.SendAsync<List<MarketHolidayResult>>(
                 HttpMethod.Get,
                 endpoint,
                 content: null,
