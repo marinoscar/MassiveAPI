@@ -21,7 +21,10 @@ public sealed class MassiveClientEndToEndTests
 
     private static MassiveClient? CreateClient()
     {
-        var apiKey = Environment.GetEnvironmentVariable("MASSIVE_API_KEY");
+        string apiKey = default!;
+        
+        apiKey = Environment.GetEnvironmentVariable("MASSIVE_API_KEY");
+
         if (string.IsNullOrWhiteSpace(apiKey))
         {
             return null;

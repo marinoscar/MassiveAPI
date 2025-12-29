@@ -69,15 +69,4 @@ public sealed class MassiveClientValidationTests
 
         Assert.Contains("Timespan", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
-
-    [Fact]
-    public async Task GetOptionsContractOverviewAsync_ThrowsWhenTickerMissing()
-    {
-        var client = CreateClient();
-        var request = new OptionsContractOverviewRequest(string.Empty);
-
-        var exception = await Assert.ThrowsAsync<ArgumentException>(() => client.GetOptionsContractOverviewAsync(request));
-
-        Assert.Contains("Options ticker", exception.Message, StringComparison.OrdinalIgnoreCase);
-    }
 }

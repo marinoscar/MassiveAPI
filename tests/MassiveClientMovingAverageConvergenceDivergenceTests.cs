@@ -32,7 +32,7 @@ public sealed class MassiveClientMovingAverageConvergenceDivergenceTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("stocks/technical-indicators/macd/AAPL", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v1/indicators/macd/AAPL", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("short_window=12", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("long_window=26", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("signal_window=9", uri!.Query, StringComparison.OrdinalIgnoreCase);

@@ -30,7 +30,7 @@ public sealed class MassiveClientExponentialMovingAverageTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("stocks/technical-indicators/ema/AAPL", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v1/indicators/ema/AAPL", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("window=10", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("timespan=day", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("adjusted=true", uri!.Query, StringComparison.OrdinalIgnoreCase);

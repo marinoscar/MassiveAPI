@@ -21,6 +21,6 @@ public sealed class MassiveClientMarketStatusTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("market-status", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v1/marketstatus/now", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
     }
 }

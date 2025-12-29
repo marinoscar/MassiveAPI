@@ -22,6 +22,6 @@ public sealed class MassiveClientRelatedTickersTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("tickers/AAPL/related", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v1/related-companies/AAPL", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
     }
 }

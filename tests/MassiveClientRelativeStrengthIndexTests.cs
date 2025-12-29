@@ -30,7 +30,7 @@ public sealed class MassiveClientRelativeStrengthIndexTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("stocks/technical-indicators/rsi/AAPL", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v1/indicators/rsi/AAPL", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("window=14", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("timespan=day", uri!.Query, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("adjusted=true", uri!.Query, StringComparison.OrdinalIgnoreCase);
