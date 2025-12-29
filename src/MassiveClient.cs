@@ -53,7 +53,7 @@ public sealed partial class MassiveClient : IMassiveClient
         _apiKey = apiKey;
         _disposeClient = httpClient is null;
         _httpClient = httpClient ?? new HttpClient();
-        _httpClient.BaseAddress = baseUri ?? new Uri("https://api.massive.com/v3/reference/");
+        _httpClient.BaseAddress = baseUri ?? new Uri("https://api.massive.com/");
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         _apiClient = new MassiveHttpClient(_httpClient, _apiKey);
