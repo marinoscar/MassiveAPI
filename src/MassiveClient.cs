@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using MassiveAPI.Requests;
 using MassiveAPI.Responses;
 
@@ -751,6 +752,16 @@ public sealed class MassiveClient : IMassiveClient
                 Content = content
             };
             using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                var notAuthorized = await TryParseNotAuthorizedAsync(response, cancellationToken).ConfigureAwait(false);
+                if (notAuthorized is not null)
+                {
+                    throw new MassiveNotAuthorizedException(notAuthorized.Message, notAuthorized.RequestId);
+                }
+            }
+
             response.EnsureSuccessStatusCode();
 
             await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
@@ -775,6 +786,42 @@ public sealed class MassiveClient : IMassiveClient
         {
             throw new MassiveApiException("The Massive API request timed out.", ex);
         }
+    }
+
+    private static async Task<NotAuthorizedError?> TryParseNotAuthorizedAsync(
+        HttpResponseMessage response,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+            var payload = await JsonSerializer.DeserializeAsync<NotAuthorizedError>(stream, SerializerOptions, cancellationToken)
+                .ConfigureAwait(false);
+            if (payload is null)
+            {
+                return null;
+            }
+
+            return string.Equals(payload.Status, "NOT_AUTHORIZED", StringComparison.OrdinalIgnoreCase)
+                ? payload
+                : null;
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    private sealed class NotAuthorizedError
+    {
+        [JsonPropertyName("status")]
+        public string? Status { get; init; }
+
+        [JsonPropertyName("request_id")]
+        public string? RequestId { get; init; }
+
+        [JsonPropertyName("message")]
+        public string Message { get; init; } = "You are not authorized to access this data.";
     }
 
     private string AppendApiKey(string endpoint)
