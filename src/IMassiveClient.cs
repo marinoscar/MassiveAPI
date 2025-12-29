@@ -325,4 +325,34 @@ public interface IMassiveClient : IDisposable
     Task<InitialPublicOfferingsResponse> GetInitialPublicOfferingsAsync(
         InitialPublicOfferingsRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves historical stock split events.
+    /// </summary>
+    /// <param name="request">The request describing split filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The splits response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<SplitsResponse> GetSplitsAsync(
+        SplitsRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves historical cash dividend distributions.
+    /// </summary>
+    /// <param name="request">The request describing dividend filters.</param>
+    /// <param name="cancellationToken">The token used to cancel the operation.</param>
+    /// <returns>The dividends response payload.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="request"/> is null.</exception>
+    /// <exception cref="OperationCanceledException">Thrown when the operation is canceled.</exception>
+    /// <exception cref="MassiveApiException">
+    /// Thrown when the Massive API request fails or the response cannot be deserialized.
+    /// </exception>
+    Task<DividendsResponse> GetDividendsAsync(
+        DividendsRequest request,
+        CancellationToken cancellationToken = default);
 }

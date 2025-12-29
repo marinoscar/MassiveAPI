@@ -114,7 +114,7 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetRelatedTickersAsync(new RelatedTickersRequest(\"AAPL\"));
+        var response = await client.GetRelatedTickersAsync(new RelatedTickersRequest("AAPL"));
 
         Assert.NotNull(response);
         Assert.False(string.IsNullOrWhiteSpace(response.Status));
@@ -150,10 +150,10 @@ public sealed class MassiveClientEndToEndTests
         }
 
         var date = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1));
-        var response = await client.GetDailyTickerSummaryAsync(new DailyTickerSummaryRequest(\"AAPL\", date)
+        var response = await client.GetDailyTickerSummaryAsync(new DailyTickerSummaryRequest("AAPL", date)
         {
             Adjusted = true,
-            Locale = \"us\"
+            Locale = "us"
         });
 
         Assert.NotNull(response);
@@ -187,10 +187,10 @@ public sealed class MassiveClientEndToEndTests
             return;
         }
 
-        var response = await client.GetSimpleMovingAverageAsync(new SimpleMovingAverageRequest(\"AAPL\")
+        var response = await client.GetSimpleMovingAverageAsync(new SimpleMovingAverageRequest("AAPL")
         {
             Window = 10,
-            Timespan = \"day\",
+            Timespan = "day",
             Adjusted = true,
             Limit = 5
         });
@@ -367,6 +367,44 @@ public sealed class MassiveClientEndToEndTests
         var response = await client.GetInitialPublicOfferingsAsync(new InitialPublicOfferingsRequest
         {
             IpoStatus = "history",
+            Limit = 1
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
+
+    [Fact]
+    public async Task GetSplitsAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetSplitsAsync(new SplitsRequest
+        {
+            Ticker = "AAPL",
+            Limit = 1
+        });
+
+        Assert.NotNull(response);
+        Assert.False(string.IsNullOrWhiteSpace(response.Status));
+    }
+
+    [Fact]
+    public async Task GetDividendsAsync_ReturnsResults()
+    {
+        var client = CreateClient();
+        if (client is null)
+        {
+            return;
+        }
+
+        var response = await client.GetDividendsAsync(new DividendsRequest
+        {
+            Ticker = "AAPL",
             Limit = 1
         });
 

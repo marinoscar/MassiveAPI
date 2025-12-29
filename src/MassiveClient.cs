@@ -609,6 +609,56 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<SplitsResponse> GetSplitsAsync(
+        SplitsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "stocks/v1/splits"
+            : $"stocks/v1/splits?{queryString}";
+
+        return await SendAsync<SplitsResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve splits from the Massive API.",
+                "Failed to deserialize the splits response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<DividendsResponse> GetDividendsAsync(
+        DividendsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "stocks/v1/dividends"
+            : $"stocks/v1/dividends?{queryString}";
+
+        return await SendAsync<DividendsResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve dividends from the Massive API.",
+                "Failed to deserialize the dividends response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -861,6 +911,57 @@ public sealed class MassiveClient : IMassiveClient
         AddParameter(parameters, "listing_date.lte", request.ListingDateLessThanOrEqual?.ToString("yyyy-MM-dd"));
         AddParameter(parameters, "listing_date.lt", request.ListingDateLessThan?.ToString("yyyy-MM-dd"));
         AddParameter(parameters, "order", request.Order);
+        AddParameter(parameters, "limit", request.Limit?.ToString());
+        AddParameter(parameters, "sort", request.Sort);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(SplitsRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "ticker", request.Ticker);
+        AddParameter(parameters, "ticker.any_of", request.TickerAnyOf);
+        AddParameter(parameters, "ticker.gt", request.TickerGreaterThan);
+        AddParameter(parameters, "ticker.gte", request.TickerGreaterThanOrEqual);
+        AddParameter(parameters, "ticker.lt", request.TickerLessThan);
+        AddParameter(parameters, "ticker.lte", request.TickerLessThanOrEqual);
+        AddParameter(parameters, "execution_date", request.ExecutionDate?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "execution_date.gt", request.ExecutionDateGreaterThan?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "execution_date.gte", request.ExecutionDateGreaterThanOrEqual?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "execution_date.lt", request.ExecutionDateLessThan?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "execution_date.lte", request.ExecutionDateLessThanOrEqual?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "adjustment_type", request.AdjustmentType);
+        AddParameter(parameters, "adjustment_type.any_of", request.AdjustmentTypeAnyOf);
+        AddParameter(parameters, "limit", request.Limit?.ToString());
+        AddParameter(parameters, "sort", request.Sort);
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(DividendsRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "ticker", request.Ticker);
+        AddParameter(parameters, "ticker.any_of", request.TickerAnyOf);
+        AddParameter(parameters, "ticker.gt", request.TickerGreaterThan);
+        AddParameter(parameters, "ticker.gte", request.TickerGreaterThanOrEqual);
+        AddParameter(parameters, "ticker.lt", request.TickerLessThan);
+        AddParameter(parameters, "ticker.lte", request.TickerLessThanOrEqual);
+        AddParameter(parameters, "ex_dividend_date", request.ExDividendDate?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "ex_dividend_date.gt", request.ExDividendDateGreaterThan?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "ex_dividend_date.gte", request.ExDividendDateGreaterThanOrEqual?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "ex_dividend_date.lt", request.ExDividendDateLessThan?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "ex_dividend_date.lte", request.ExDividendDateLessThanOrEqual?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "frequency", request.Frequency?.ToString());
+        AddParameter(parameters, "frequency.gt", request.FrequencyGreaterThan?.ToString());
+        AddParameter(parameters, "frequency.gte", request.FrequencyGreaterThanOrEqual?.ToString());
+        AddParameter(parameters, "frequency.lt", request.FrequencyLessThan?.ToString());
+        AddParameter(parameters, "frequency.lte", request.FrequencyLessThanOrEqual?.ToString());
+        AddParameter(parameters, "distribution_type", request.DistributionType);
+        AddParameter(parameters, "distribution_type.any_of", request.DistributionTypeAnyOf);
         AddParameter(parameters, "limit", request.Limit?.ToString());
         AddParameter(parameters, "sort", request.Sort);
 
