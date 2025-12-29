@@ -36,7 +36,7 @@ public sealed class ExchangeResult
     /// The exchange identifier.
     /// </summary>
     [JsonPropertyName("id")]
-    public string? Id { get; init; }
+    public int? Id { get; init; }
 
     /// <summary>
     /// The exchange type.
