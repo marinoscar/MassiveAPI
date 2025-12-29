@@ -127,8 +127,8 @@ public sealed partial class MassiveClient
 
         var queryString = QueryStringBuilder.Build(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? $"stocks/aggregates/previous-day-bar/{Uri.EscapeDataString(request.Ticker)}"
-            : $"stocks/aggregates/previous-day-bar/{Uri.EscapeDataString(request.Ticker)}?{queryString}";
+            ? $"v2/aggs/ticker/{Uri.EscapeDataString(request.Ticker)}/prev"
+            : $"v2/aggs/ticker/{Uri.EscapeDataString(request.Ticker)}/prev?{queryString}";
 
         return await _apiClient.SendAsync<PreviousDayBarResponse>(
                 HttpMethod.Get,

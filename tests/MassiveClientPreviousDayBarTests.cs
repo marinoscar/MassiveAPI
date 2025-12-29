@@ -27,7 +27,7 @@ public sealed class MassiveClientPreviousDayBarTests
         Assert.NotNull(handler.LastRequest);
         var uri = handler.LastRequest!.RequestUri;
         Assert.NotNull(uri);
-        Assert.Contains("stocks/aggregates/previous-day-bar/AAPL", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("v2/aggs/ticker/AAPL/prev", uri!.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("adjusted=true", uri!.Query, StringComparison.OrdinalIgnoreCase);
     }
 }
