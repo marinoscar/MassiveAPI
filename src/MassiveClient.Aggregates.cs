@@ -62,10 +62,23 @@ public sealed partial class MassiveClient
             throw new ArgumentNullException(nameof(request));
         }
 
+        if (string.IsNullOrWhiteSpace(request.Locale))
+        {
+            throw new ArgumentException("Locale is required.", nameof(request));
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Market))
+        {
+            throw new ArgumentException("Market is required.", nameof(request));
+        }
+
+        var date = request.Date.ToString("yyyy-MM-dd");
         var queryString = QueryStringBuilder.Build(request);
+        var locale = Uri.EscapeDataString(request.Locale);
+        var market = Uri.EscapeDataString(request.Market);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "stocks/aggregates/daily-market-summary"
-            : $"stocks/aggregates/daily-market-summary?{queryString}";
+            ? $"v2/aggs/grouped/locale/{locale}/market/{market}/{date}"
+            : $"v2/aggs/grouped/locale/{locale}/market/{market}/{date}?{queryString}";
 
         return await _apiClient.SendAsync<DailyMarketSummaryResponse>(
                 HttpMethod.Get,
@@ -114,8 +127,8 @@ public sealed partial class MassiveClient
 
         var queryString = QueryStringBuilder.Build(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? $"stocks/aggregates/previous-day-bar/{Uri.EscapeDataString(request.Ticker)}"
-            : $"stocks/aggregates/previous-day-bar/{Uri.EscapeDataString(request.Ticker)}?{queryString}";
+            ? $"v2/aggs/ticker/{Uri.EscapeDataString(request.Ticker)}/prev"
+            : $"v2/aggs/ticker/{Uri.EscapeDataString(request.Ticker)}/prev?{queryString}";
 
         return await _apiClient.SendAsync<PreviousDayBarResponse>(
                 HttpMethod.Get,

@@ -54,10 +54,6 @@ internal static class QueryStringBuilder
     {
         var parameters = new List<string>();
 
-        AddParameter(parameters, "date", request.Date.ToString("yyyy-MM-dd"));
-        AddParameter(parameters, "market", request.Market);
-        AddParameter(parameters, "locale", request.Locale);
-
         return string.Join("&", parameters);
     }
 
