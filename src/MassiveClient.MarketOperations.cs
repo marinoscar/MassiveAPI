@@ -18,8 +18,8 @@ public sealed partial class MassiveClient
 
         var queryString = QueryStringBuilder.Build(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "exchanges"
-            : $"exchanges?{queryString}";
+            ? "/v3/reference/exchanges"
+            : $"/v3/reference/exchanges?{queryString}";
 
         return await _apiClient.SendAsync<ExchangesResponse>(
                 HttpMethod.Get,
@@ -43,8 +43,8 @@ public sealed partial class MassiveClient
 
         var queryString = QueryStringBuilder.Build(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "market-holidays"
-            : $"market-holidays?{queryString}";
+            ? "/v1/marketstatus/upcoming"
+            : $"/v1/marketstatus/upcoming?{queryString}";
 
         return await _apiClient.SendAsync<MarketHolidaysResponse>(
                 HttpMethod.Get,
@@ -61,7 +61,7 @@ public sealed partial class MassiveClient
     {
         return await _apiClient.SendAsync<MarketStatusResponse>(
                 HttpMethod.Get,
-                "market-status",
+                "/v1/marketstatus/now",
                 content: null,
                 "Failed to retrieve market status from the Massive API.",
                 "Failed to deserialize the market status response from the Massive API.",
@@ -81,8 +81,8 @@ public sealed partial class MassiveClient
 
         var queryString = QueryStringBuilder.Build(request);
         var endpoint = string.IsNullOrWhiteSpace(queryString)
-            ? "condition-codes"
-            : $"condition-codes?{queryString}";
+            ? "/v3/reference/conditions"
+            : $"/v3/reference/conditions?{queryString}";
 
         return await _apiClient.SendAsync<ConditionCodesResponse>(
                 HttpMethod.Get,
