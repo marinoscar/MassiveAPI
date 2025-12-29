@@ -1,0 +1,121 @@
+using MassiveAPI.Builders;
+using MassiveAPI.Requests;
+using MassiveAPI.Responses;
+
+namespace MassiveAPI;
+
+public sealed partial class MassiveClient
+{
+    /// <inheritdoc />
+    public async Task<ExchangesResponse> GetExchangesAsync(
+        ExchangesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = QueryStringBuilder.Build(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "exchanges"
+            : $"exchanges?{queryString}";
+
+        return await _apiClient.SendAsync<ExchangesResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve exchanges from the Massive API.",
+                "Failed to deserialize the exchanges response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<MarketHolidaysResponse> GetMarketHolidaysAsync(
+        MarketHolidaysRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = QueryStringBuilder.Build(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "market-holidays"
+            : $"market-holidays?{queryString}";
+
+        return await _apiClient.SendAsync<MarketHolidaysResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve market holidays from the Massive API.",
+                "Failed to deserialize the market holidays response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<MarketStatusResponse> GetMarketStatusAsync(CancellationToken cancellationToken = default)
+    {
+        return await _apiClient.SendAsync<MarketStatusResponse>(
+                HttpMethod.Get,
+                "market-status",
+                content: null,
+                "Failed to retrieve market status from the Massive API.",
+                "Failed to deserialize the market status response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<ConditionCodesResponse> GetConditionCodesAsync(
+        ConditionCodesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = QueryStringBuilder.Build(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "condition-codes"
+            : $"condition-codes?{queryString}";
+
+        return await _apiClient.SendAsync<ConditionCodesResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve condition codes from the Massive API.",
+                "Failed to deserialize the condition codes response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<FuturesExchangesResponse> GetFuturesExchangesAsync(
+        FuturesExchangesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = QueryStringBuilder.Build(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "futures/exchanges"
+            : $"futures/exchanges?{queryString}";
+
+        return await _apiClient.SendAsync<FuturesExchangesResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve futures exchanges from the Massive API.",
+                "Failed to deserialize the futures exchanges response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+}
