@@ -1,5 +1,10 @@
 # MassiveAPI
 
+![NuGet Downloads](https://img.shields.io/nuget/dt/:MassiveAPI)
+![NuGet Version](https://img.shields.io/nuget/:variant/:MassiveAPI)
+
+
+
 A typed C# client library for the Massive REST API. The library provides request/response models
 and a `MassiveClient` implementation (plus `IMassiveClient`) for interacting with the Massive
 endpoints using strongly-typed inputs and outputs.
