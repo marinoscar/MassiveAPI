@@ -16,7 +16,7 @@ public sealed partial class MassiveClient
             throw new ArgumentNullException(nameof(request));
         }
 
-        var endpoint = $"tickers/{Uri.EscapeDataString(request.Ticker)}";
+        var endpoint = $"/v3/reference/tickers/{Uri.EscapeDataString(request.Ticker)}";
         return await _apiClient.SendAsync<TickerOverviewResponse>(
                 HttpMethod.Get,
                 endpoint,
