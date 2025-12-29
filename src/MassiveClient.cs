@@ -584,6 +584,31 @@ public sealed class MassiveClient : IMassiveClient
             .ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<InitialPublicOfferingsResponse> GetInitialPublicOfferingsAsync(
+        InitialPublicOfferingsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is null)
+        {
+            throw new ArgumentNullException(nameof(request));
+        }
+
+        var queryString = BuildQueryString(request);
+        var endpoint = string.IsNullOrWhiteSpace(queryString)
+            ? "ipos"
+            : $"ipos?{queryString}";
+
+        return await SendAsync<InitialPublicOfferingsResponse>(
+                HttpMethod.Get,
+                endpoint,
+                content: null,
+                "Failed to retrieve IPOs from the Massive API.",
+                "Failed to deserialize the IPOs response from the Massive API.",
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     private async Task<TResponse> SendAsync<TResponse>(
         HttpMethod method,
         string endpoint,
@@ -818,6 +843,26 @@ public sealed class MassiveClient : IMassiveClient
         var parameters = new List<string>();
 
         AddParameter(parameters, "limit", request.Limit?.ToString());
+
+        return string.Join("&", parameters);
+    }
+
+    private static string BuildQueryString(InitialPublicOfferingsRequest request)
+    {
+        var parameters = new List<string>();
+
+        AddParameter(parameters, "ticker", request.Ticker);
+        AddParameter(parameters, "us_code", request.UsCode);
+        AddParameter(parameters, "isin", request.Isin);
+        AddParameter(parameters, "listing_date", request.ListingDate?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "ipo_status", request.IpoStatus);
+        AddParameter(parameters, "listing_date.gte", request.ListingDateGreaterThanOrEqual?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "listing_date.gt", request.ListingDateGreaterThan?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "listing_date.lte", request.ListingDateLessThanOrEqual?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "listing_date.lt", request.ListingDateLessThan?.ToString("yyyy-MM-dd"));
+        AddParameter(parameters, "order", request.Order);
+        AddParameter(parameters, "limit", request.Limit?.ToString());
+        AddParameter(parameters, "sort", request.Sort);
 
         return string.Join("&", parameters);
     }
