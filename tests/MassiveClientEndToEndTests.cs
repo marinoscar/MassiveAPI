@@ -1,5 +1,6 @@
 using MassiveAPI;
 using MassiveAPI.Requests;
+using System.Diagnostics;
 using Xunit;
 
 namespace MassiveAPI.UnitTests;
@@ -41,6 +42,9 @@ public sealed class MassiveClientEndToEndTests
     /// </summary>
     private static Task WaitForRateLimitAsync()
     {
+        if (Debugger.IsAttached) 
+            return Task.CompletedTask; //ignore if debugging
+
         return Task.Delay(TimeSpan.FromSeconds(RateLimitDelaySeconds));
     }
 
