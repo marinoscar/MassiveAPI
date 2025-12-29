@@ -31,8 +31,9 @@ public sealed class MassiveClientEndToEndTests
 
     private void WarnIfNotAuthorized(MassiveNotAuthorizedException ex)
     {
-        
-        _output.WriteLine($"WARNING: Not authorized for this endpoint. RequestId={ex.RequestId}. Message={ex.Message}");
+        var warningMsg = $"WARNING: Not authorized for this endpoint. RequestId={ex.RequestId}. Message={ex.Message}";
+        TestContext.Current.AddWarning(warningMsg);
+        _output.WriteLine(warningMsg);
     }
 
     /// <summary>
